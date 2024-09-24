@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/drop.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block style_css %}{% endblock %}
+<style>
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("{% static 'fonts/roboto/Roboto-Regular.ttf' %}") format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("{% static 'fonts/roboto/Roboto-Bold.ttf' %}") format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("{% static 'fonts/roboto/Roboto-Italic.ttf' %}") format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("{% static 'fonts/roboto/Roboto-BoldItalic.ttf' %}") format('truetype');
+    font-weight: 700;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("{% static 'fonts/roboto/Roboto-Light.ttf' %}") format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("{% static 'fonts/roboto/Roboto-LightItalic.ttf' %}") format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("{% static 'fonts/roboto/Roboto-Medium.ttf' %}") format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("{% static 'fonts/roboto/Roboto-MediumItalic.ttf' %}") format('truetype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("{% static 'fonts/roboto/Roboto-SemiBold.ttf' %}") format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("{% static 'fonts/roboto/Roboto-SemiBoldItalic.ttf' %}") format('truetype');
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("{% static 'fonts/roboto/Roboto-ExtraBold.ttf' %}") format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("{% static 'fonts/roboto/Roboto-ExtraBoldItalic.ttf' %}") format('truetype');
+    font-weight: 800;
+    font-style: italic;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+::selection {
+    background-color:var(--main-color) ; /* Цвет фона выделения */
+    color: white; /* Цвет текста при выделении */
+}
+</style>
+</head>
+<body>
+   <header>
+        <nav>
+            <div class="short-menu">
+                <div class = "menu-item">
+                        <a href="#"><h3>ShipKZ</h3></a>
+                </div>
+                <div class = "spacer"></div>
+                <div class="menu-item">
+                    <button class="menu-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,256,256" width="50px" height="50px" fill-rule="nonzero">
+                            <g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+                                <g transform="scale(5.12,5.12)">
+                                    <path d="M0,9v2h50v-2zM0,24v2h50v-2zM0,39v2h50v-2z"></path>
+                                </g>
+                            </g>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="long-menu">
+                <div class="menu-item">
+                    <a href="{% url 'home' %}">Главная</a>
+                </div>
+                <div class="menu-item">
+                    <a href="{% url 'kazakhstan' %}">Транзит через Казахстан</a>
+                </div>
+                <div class="menu-item">
+                    <a href="{% url 'trade_inn' %}">Tradeinn</a>
+                </div>
+                <div class="menu-item">
+                    <a href="{% url 'about_us' %}">О нас</a>
+                </div>
+                <div class="menu-item">
+                    <a href="{% url 'tariffs' %}">Тарифы</a>
+                </div>
+                <div class="menu-item">
+                    <a href="{% url 'lk-start' %}">Вход в личный кабинет</a>
+                </div>
+            </div>
+        </nav>
+   </header>
+    <main>
+        {% block content %} {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 ShipKZ. All rights reserved.</p>
+    </footer>
+<script src="{% static 'js/header.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+{% extends 'components/base.html' %}
+{% block title %}Личный кабинет{% endblock %}
+{% block content %}
+{% load static %}
+<style>
+
+  .lk-container {
+        display: flex;
+        flex-wrap: wrap;
+        flex-grow: 1;
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+
+    /* Навигация */
+    .lk-nav-container {
+        flex: 1 1 150px;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        border: 1px solid var(--main-color);
+        margin: 5px;
+        align-self: flex-start; /* Занимает только необходимую высоту */
+        padding: 10px; /* Отступы внутри */
+        border-radius: 8px; /* Сглаженные углы */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Навигационное меню */
+    .lk-nav-container nav ul {
+        list-style-type: none; /* Убираем маркеры у списка */
+        padding: 0;
+        margin: 0;
+    }
+
+    /* Стили для пунктов меню */
+    .lk-nav-container nav ul li {
+        margin-bottom: 10px;
+    }
+
+    /* Стили для ссылок в меню */
+    .lk-nav-container nav ul li a {
+        text-decoration: none; /* Убираем подчеркивание у ссылок */
+        font-size: 16px;
+        color: var(--main-color); /* Основной цвет текста */
+        padding: 10px;
+        display: block; /* Делает ссылку блоком для расширения области клика */
+        border: 1px solid var(--main-color); /* Обводка */
+        border-radius: 5px;
+        text-align: center; /* Центрируем текст */
+        transition: background-color 0.3s, color 0.3s; /* Добавляем плавный переход для эффекта при наведении */
+    }
+
+    /* Эффект при наведении на ссылки */
+    .lk-nav-container nav ul li a:hover {
+        background-color: var(--main-color); /* Меняем фон на основной цвет */
+        color: white; /* Цвет текста белый при наведении */
+    }
+
+    /* Активная ссылка, можно вручную добавлять класс active к активной странице */
+    .lk-nav-container nav ul li a.active {
+        background-color: var(--main-color);
+        color: white;
+    }
+
+    /* Контент личного кабинета */
+    .lk-content-container {
+        flex: 1 1 60%;
+        display: flex;
+        flex-direction: column;
+        margin: 5px;
+        border: 1px solid var(--main-color);
+        padding: 5px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+</style>
+
+<div class="lk-container">
+    <div class="lk-nav-container">
+        <nav>
+            <ul>
+                <li><a href="{% url 'lk-create-order' %}">Оформить заявку</a></li>
+                <li><a href="{% url 'lk-orders' %}">Ваши заказы</a></li>
+                <li><a href="{% url 'lk-pre-orders' %}">Ваши заявки</a></li>
+                <li><a href="{% url 'lk-messages' %}">Сообщения</a></li>
+                <li><a href="#">Счет</a></li>
+                <li><a href="{% url 'lk-profile' %}">Ваш профиль</a></li>
+                <li><a href="{% url 'lk-logout' %}">Выход</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="lk-content-container">
+        {% block lk_content %}
+        <!-- Контент по умолчанию -->
+        {% endblock %}
+    </div>
+</div>
+
+{% endblock %}

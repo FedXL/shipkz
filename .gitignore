@@ -1,0 +1,60 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.env
+*.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.mypy_cache/
+.dmypy.json
+.pyre/
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+celerybeat-schedule
+instance/
+.webassets-cache
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+
+# Django
+*.log
+*.pot
+*.py[cod]
+*~
+\#*\#
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+static/
+
+# Django environment variables
+.env
+.env.local
+.env.production
+.env.test
+.env.*
+
+# Pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db

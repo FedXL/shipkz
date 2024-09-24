@@ -1,0 +1,16 @@
+{% extends 'components/base.html' %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+
+<div class="container">
+    <h2 style="color: var(--main-color);">Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="background-color: var(--main-color); color: white;">Login</button>
+    </form>
+    <div class="register-link">
+        Don't have an account? <a href="{% url 'signup' %}" style="color: var(--main-color);">Register here</a>
+    </div>
+</div>
+{% endblock %}

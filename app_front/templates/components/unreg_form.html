@@ -1,0 +1,49 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+<form class="order-form" method="post">
+    {% csrf_token %}
+    <span class="input_explain">{{form.where_to.label}}</span>
+    <div class = "row-container">
+        <div class="form-country">
+            {% for choice in form.where_to %}
+                <label class="radio-img" for="radio-{{ choice.data.value }}">
+                    <input type="radio" id="radio-{{ choice.data.value }}"  name="where_to" value="{{ choice.data.value }}" style="display:none;">
+                    <img src="{% static '/images/flags' %}/{{ choice.data.value }}.jpg?v={{version}}" title="{{ choice.choice_label }}">
+                </label>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row-container">
+        <div class="input-container">
+            <span class = "input_explain">{{form.goods_link.label}}</span>
+            {{form.goods_link}}
+        </div>
+    </div>
+    <div class="row-container">
+        <div class="input-container">
+            <span class = "input_explain">{{form.price.label}}</span>
+            {{form.price}}
+        </div>
+        <div class="input-container">
+            <span class = "input_explain">{{form.count.label}}</span>
+            {{form.count}}
+        </div>
+    </div>
+    <div class="row-container">
+        <div class="input-container">
+            <span class = "input_explain">{{form.comment.label}}</span>
+            {{form.comment}}
+        </div>
+    </div>
+    <div class="row-container">
+        <div class="input-container">
+            <span class = "input_explain">{{form.email.label}}</span>
+            {{form.email}}
+        </div>
+        <div class="input-container">
+            <span class = "input_explain">{{form.phone.label}}</span>
+            {{form.phone}}
+        </div>
+    </div>
+    <button class="submit-button" type="submit">Заказать</button>
+</form>
