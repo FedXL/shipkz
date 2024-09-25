@@ -105,3 +105,5 @@ def form_for_register_user(request):
 
 
 
+def testing_view(request):
+    return render(request, 'pages/test.html')

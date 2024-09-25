@@ -12,6 +12,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'daphne',
     'django.contrib.staticfiles',
     'app_front.apps.AppFrontConfig',
     'app_auth.apps.AppAuthConfig',
@@ -53,6 +54,8 @@ TEMPLATES = [
     },
 ]
 WSGI_APPLICATION = 'shipkz.wsgi.application'
+
+ASGI_APPLICATION = 'shipkz.asgi.application'
 
 DATABASES = {
 

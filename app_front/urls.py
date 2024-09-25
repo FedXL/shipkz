@@ -2,11 +2,11 @@ from django.urls import path
 
 from app_front.views import StartingPageView, KazakhstanPageView, TradeinnPageView, AboutUsPageView, ContactsPageView, \
     TariffsPageView, LkHelloPageView, LkCreateOrderPageView, LkOrdersPageView, LkPreordersPageView, LkProfilePageView, \
-    LkMessagesPageView, LkLogoutPageView
-
+    LkMessagesPageView, LkLogoutPageView, testing_view
 
 urlpatterns = [
     path('', StartingPageView.as_view(), name='home'),
+    path('test/', testing_view, name='test'),
     path('kazakhstan/', KazakhstanPageView.as_view(), name='kazakhstan'),
     path('trade_inn/', TradeinnPageView.as_view(), name='trade_inn'),
     path('about_us/', AboutUsPageView.as_view(), name='about_us'),
