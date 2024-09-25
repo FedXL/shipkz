@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"  # Открываем порт для внешнего доступа
+    environment:
+      POSTGRES_DB: ${POSTGRES_NAME}  # Убедитесь, что эта переменная определена
+      POSTGRES_USER: ${POSTGRES_USER}  # Убедитесь, что эта переменная определена
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # Убедитесь, что эта переменная определена
+
+volumes:
+  postgres_data:
