@@ -5,7 +5,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','127.0.0.1']
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -54,7 +54,6 @@ TEMPLATES = [
     },
 ]
 WSGI_APPLICATION = 'shipkz.wsgi.application'
-
 ASGI_APPLICATION = 'shipkz.asgi.application'
 
 DATABASES = {
@@ -102,12 +101,13 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 STATIC_URL = 'static/'
-STATIC_ROOT = '/var/www/static'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = 'media/'
+
+STATIC_ROOT = '/var/www/static'
 MEDIA_ROOT = '/var/www/media'

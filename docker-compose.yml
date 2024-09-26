@@ -5,12 +5,14 @@ services:
     build: .
     command: >
       sh -c "python manage.py collectstatic --noinput &&
-             gunicorn shipkz.wsgi:application --bind 0.0.0.0:8000"
+             gunicorn shipkz.wsgi:application --bind 0.0.0.0:8000 &
+             daphne -b 0.0.0.0 -p 8001 shipkz.asgi:application"
     volumes:
       - static_volume:/var/www/static
       - media_volume:/var/www/media
     expose:
       - "8000"
+      - "8001"
     depends_on:
       - db
   db:
