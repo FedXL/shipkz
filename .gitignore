@@ -37,7 +37,7 @@ instance/
 *.sqlite3
 db.sqlite3
 media/
-**static/images/*
+
 
 # Django environment variables
 .env
