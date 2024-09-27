@@ -1,1 +1,16 @@
-<iframe src="https://yandex.ru/map-widget/v1/?z=14&amp;ol=biz&amp;oid=37517158718" width="50%" height="400" frameborder="0"></iframe>
+{% load static %}
+<div id="map-container" style="position: relative; width: 50%; height: 400px;">
+    <!-- Статичная картинка -->
+    <img id="map-image" src="{% static 'images/yandex.png' %}" alt="Карта" style="width: 100%; height: 100%; cursor: pointer;">
+
+</div>
+
+<script>
+document.getElementById("map-image").addEventListener("click", function() {
+    // Когда пользователь кликает по картинке, заменяем её на iframe
+    document.getElementById("map-container").innerHTML = `
+        <iframe src="https://yandex.ru/map-widget/v1/?z=14&amp;ol=biz&amp;oid=37517158718"
+                width="100%" height="100%" frameborder="0"></iframe>
+    `;
+});
+</script>

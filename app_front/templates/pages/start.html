@@ -45,29 +45,37 @@
     <p>Cроки доставки казахскими форвардерами из США, Европы и Англии 7-14 дней.</p>
     <p>Срок доставки из Казахстана в РФ 5-10 дней сдеком, в зависимости от тарифа. Наша скорость вас приятно удивит!</p>
 
+{% include 'components/yandex_map.html' %}
+
     <img src="{% static 'images/site-image.jpg' %}" alt="Parallax Image"
          style="max-width: 100%; height: auto; display: block; margin:auto;">
 
 {% include 'components/unreg_form.html' %}
 
 <style>
-
 .youtube-container {
     display: flex;
     flex-wrap: wrap;
-
 }
 
 .youtube-link {
-    flex: 1 1 230px; /* Элемент занимает минимум 250px */
+    flex: 1 1 230px; /* Элемент занимает минимум 230px */
     gap: 5px;
-    margin: auto:
-    padding: 5px:
+    margin: auto;
+    padding: 5px;
+    overflow: hidden; /* Скрыть часть изображения, если оно выходит за пределы контейнера */
+    perspective: 1000px; /* Задает перспективу для дочерних элементов */
 }
 
 .youtube-link img {
     max-width: 100%;
     height: auto;
+    transition: transform 0.5s ease; /* Плавный переход при наведении */
+    transform-style: preserve-3d; /* Сохраняет 3D-эффекты */
+}
+
+.youtube-link:hover img {
+    transform: scale(1.1) rotateY(10deg); /* Увеличение и поворот по оси Y */
 }
 
 </style>

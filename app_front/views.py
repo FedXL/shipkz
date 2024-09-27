@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 from app_front.forms import UnregisteredOrderForm, OrderForm, RegisterOrderItemForm
+from app_front.mixins import ActiveUserConfirmMixin
 from app_front.utils import generate_jwt_token
 from legacy.models import Exchange
 
@@ -84,11 +85,11 @@ class ContactsPageView(View):
     def get(self, request):
         return render(request, 'pages/contacts.html')
 
-class LkHelloPageView(View):
+class LkHelloPageView(ActiveUserConfirmMixin,View):
     def get(self, request):
         return render(request, 'lk-pages/lk-hello-page.html')
 
-class LkCreateOrderPageView(View):
+class LkCreateOrderPageView(ActiveUserConfirmMixin,View):
     def get(self, request):
         RegisterOrderItemFormSet = formset_factory(RegisterOrderItemForm, extra=1, max_num=10)
         if request.method == 'POST':
@@ -112,11 +113,11 @@ class LkCreateOrderPageView(View):
             'formset': formset,
         })
 
-class LkOrdersPageView(View):
+class LkOrdersPageView(ActiveUserConfirmMixin, View):
     def get(self, request):
         return render(request, 'lk-pages/lk-orders-page.html')
 
-class LkPreordersPageView(View):
+class LkPreordersPageView(ActiveUserConfirmMixin, View):
     def get(self, request):
         return render(request, 'lk-pages/lk-pre-orders-page.html')
 
@@ -124,7 +125,7 @@ class LkProfilePageView(View):
     def get(self, request):
         return render(request, 'lk-pages/lk-profile-page.html')
 
-class LkMessagesPageView(View):
+class LkMessagesPageView(ActiveUserConfirmMixin, View):
     def get(self, request):
         token=generate_jwt_token(1, 'admin')
         return render(request,

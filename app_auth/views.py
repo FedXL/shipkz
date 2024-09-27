@@ -60,3 +60,8 @@ class ConfirmEmailView(APIView):
             return Response({'message': 'Email confirmed successfully'}, status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+class AllertsView(View):
+    def get(self, request):
+        logout(request)
+        return HttpResponseRedirect(reverse('home'))

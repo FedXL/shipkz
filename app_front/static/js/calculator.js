@@ -104,6 +104,8 @@
         return resultItem;
     }
 
+
+
     function calculateCost(weight) {
         const priceRanges = {
             '1-2': 900,
@@ -200,6 +202,18 @@
                 let description  = `${OrderInfo.FraudDate} 1 ${OrderInfo.TypeCurrency} = ${OrderInfo.FraudCurrency} RUB`;
                 let result1 = `${OrderInfo.FraudCurrency} ₽`;
                 const CurrencyItem = createItemElement("Курс на покупку в Сбербанк",description, result1);
+                const firstParagraph = CurrencyItem.querySelector(".result-item-name");
+
+// Создаём элемент ссылки
+                const linkElement = document.createElement("a");
+                linkElement.href = "http://www.sberbank.ru/ru/quotes/currencies?tab=kurs&currency=USD&currency=EUR&package=ERNP-2";
+                linkElement.textContent = "Курс на покупку в Сбербанк";
+                linkElement.target = "_blank"; // Открыть ссылку в новой вкладке
+                linkElement.classList.add("mark-main-color");
+
+                // Очищаем параграф и добавляем ссылку внутрь него
+                firstParagraph.textContent = '';  // Очистка текста параграфа
+                firstParagraph.appendChild(linkElement);
 
                 let description2 = `${priceInCurrency} ${currency} Х ${OrderInfo.FraudCurrency} ₽`;
                 let result2 = `${OrderInfo.FraudPriceInRub} ₽`;
