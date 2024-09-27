@@ -1,0 +1,142 @@
+input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            margin: 0 !important;
+            max-height: 44px !important;
+        }
+		@media (max-width: 375px) {
+  		.result-item-description {
+    		display: none;
+  					}
+			}
+        .DeliveryPrice{
+            display:flex;
+            flex-direction:column;
+        }
+        .sizeContainer{
+            display:flex;
+            justify-content:space-between;
+			flex-wrap: wrap;
+        }
+        .sizeContainer input{
+            max-width: 100px !important;
+        }
+        .calculator-container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: row;
+        }
+        .calculator {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            flex: 1;
+        }
+        .calculator h2 {
+            color: #333;
+        }
+        .result-container h2 {
+            color: #333;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calculator label {
+            margin: 10px 0 5px 0;
+        }
+        .calculator input[type="text"],
+        .calculator select {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+        .checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .checkbox input {
+            margin-right: 10px;
+        }
+        .calculators-button {
+            padding: 10px 20px;
+            background-color: #00afca;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .calculators-button:hover {
+            background-color: rgba(0, 192, 202, 0.64);
+        }
+        .result-container {
+            width: 100%;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+            padding: 5px 0;
+        }
+
+        .result-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .result-buttons {
+            margin-top: 20px;
+        }
+        .result-item-name{
+            font-weight: bold;
+            margin: 0px !important;
+        }
+        .result-item-description{
+            margin-bottom: 0px !important;
+            margin-top: 0.3rem !important;
+            color: #666666;
+            font-size: 0.8rem !important;
+            font-style: italic;
+        }
+        .result-item-value {
+            font-size: 1.5rem;
+            align-self: flex-end;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .wightContainer {
+            display: flex;
+            flex-direction:column;
+            margin-bottom: 10px;
+        }
+        .input-group {
+            display: inline-flex;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .input-prefix, .input-suffix {
+            background-color: #eee;
+            padding: 10px;
+            display: inline-block;
+        }
+
+        .input-field {
+            border: none;
+            padding: 10px;
+            outline: none;
+            flex-grow: 1;
+        }

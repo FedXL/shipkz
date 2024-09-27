@@ -1,0 +1,82 @@
+html {
+    font-size: 16px;
+}
+
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* header, main, footer */
+    grid-template-columns: 1fr; /* Только один столбец */
+    min-height: 100vh; /* Убедитесь, что тело страницы занимает всю высоту экрана */
+}
+
+header {
+    grid-row: 1 / 2;
+    background-color: var(--main-color);
+    width: 100%;
+}
+
+.short-menu,
+.long-menu {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+
+@media (max-width: 425px) {
+    .long-menu {
+        display: none;
+        flex-direction: column;
+    }
+    .short-menu {
+        display: flex;
+    }
+}
+@media (min-width: 426px) {
+    .long-menu {
+        display: flex;
+        flex-direction: row;
+    }
+    .short-menu {
+        display: none;
+    }
+}
+
+.short-menu button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+.spacer {
+    flex-grow: 1;
+}
+
+.menu-item a {
+    display: block;
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    height: 100%;
+    white-space: nowrap;
+}
+
+.menu-item:hover {
+    background-color: #555;
+}
+
+main {
+    grid-row: 2 / 3; /* Занимает вторую строку */
+    padding: 8px;
+    width: 100%; /* Занимает всю доступную ширину */
+    max-width: 1024px;
+}
+
+footer {
+    grid-row: 3 / 4; /* Занимает третью строку */
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}

@@ -6,6 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 ALLOWED_HOSTS = ['localhost','127.0.0.1']
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -20,9 +21,10 @@ INSTALLED_APPS = [
     'legacy.apps.LegacyConfig',
     'debug_toolbar',
     'channels',
+    'rest_framework',
 ]
+SITE_ID = 1
 
-ASGI_APPLICATION = 'shipkz.asgi.application'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -38,6 +40,7 @@ MIDDLEWARE = [
 
 INTERNAL_IPS = ['127.0.0.1']
 ROOT_URLCONF = 'shipkz.urls'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -63,8 +66,7 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_NAME'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        # 'HOST': os.getenv('POSTGRES_HOST'),
-        'HOST': 'localhost',
+        'HOST': os.getenv('POSTGRES_HOST'),
         'PORT': os.getenv('POSTGRES_PORT'),
     }
 }
@@ -111,3 +113,7 @@ MEDIA_URL = 'media/'
 
 STATIC_ROOT = '/var/www/static'
 MEDIA_ROOT = '/var/www/media'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)

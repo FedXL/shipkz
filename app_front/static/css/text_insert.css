@@ -1,0 +1,31 @@
+   p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+ul {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+ul li {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+ul li:before {
+    content: "• "; /* Используем маркер вместо стандартного */
+    color: var(--main-color); /* Синий цвет для маркера */
+}
+
+strong {
+    color: var(--main-color);; /* Выделение важного текста */
+    font-weight: bold;
+}
+p strong {
+    display: block;
+    margin-top: 20px;
+}

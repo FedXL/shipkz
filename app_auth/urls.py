@@ -1,10 +1,10 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views
 
-from app_auth.views import signup
+from app_auth.views import SignUpView, LoginView, LogoutCustomView,  ConfirmEmailView
 
 urlpatterns = [
-    path('signup/', signup, name='signup'),
-    path('login/', auth_views.LoginView.as_view(), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('signup/', SignUpView.as_view(), name='signup'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutCustomView.as_view(), name='logout'),
+    path('confirm_email/', ConfirmEmailView.as_view(), name='confirm_email'),
 ]

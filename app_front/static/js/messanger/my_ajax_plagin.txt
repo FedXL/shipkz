@@ -1,0 +1,98 @@
+
+
+add_action('wp_ajax_delete_order', 'delete_order_foo');
+add_action('wp_ajax_nopriv_unregistered_user','my_ajax_unregistered_user_handler');
+add_action('wp_ajax_nopriv_get_exchange','get_exchange_foo');
+add_action('wp_ajax_get_exchange','get_exchange_foo');
+
+function get_exchange_foo() {
+    $url = get_exchange_url();
+    $response = wp_remote_get($url);
+    $response_body = wp_remote_retrieve_body($response);
+    $parsed_data = json_decode($response_body, true);
+    if (is_wp_error($response)) {
+        $error_message = $response->get_error_message();
+        $response_data = array("result" => "error", "message" => $error_message);
+    } else {
+        $response_data = $parsed_data;
+    }
+    wp_send_json($response_data);
+    wp_die();
+}
+
+function my_ajax_unregistered_user_handler() {
+    $event_type = sanitize_text_field($_POST['event']);
+    $url = get_my_api_access_url();
+    $user_id = get_current_user_id();
+    $username = $_SERVER['REMOTE_ADDR'];
+    $token = generate_jwt_token($user_id, $username);
+
+    switch ($event_type) {
+        case 'get_long_token':
+            $send_data = array(
+                'token' => $token,
+                'event' => $event_type,
+            );
+            break;
+
+        case 'get_access_token':
+            $long_token = sanitize_text_field($_POST['long_token']);
+
+            $send_data = array(
+                'long_token' => $long_token,
+                'event' => $event_type,
+                'token' => $token,
+            );
+            break;
+        default:
+            $response_data = array(
+                'result' => 'error',
+                'message' => 'Неизвестный тип события'
+            );
+            wp_send_json($response_data);
+            wp_die();
+    }
+
+    $request_data = array(
+        'method' => 'POST',
+        'body' =>  json_encode($send_data),
+    );
+    $response = wp_remote_request($url, $request_data);
+    $response_body = wp_remote_retrieve_body($response);
+    $parsed_data = json_decode($response_body, true);
+    if (is_wp_error($response)) {
+        $error_message = $response->get_error_message();
+        $response_data = array("result" => "error", "message" => $error_message);
+    } else {
+        $response_data = $parsed_data;
+    }
+    wp_send_json($response_data);
+    wp_die();
+}
+
+function delete_order_foo() {
+    $order_id = sanitize_text_field($_POST['order_id']);
+    $url = get_my_api_url();
+    $user_id = get_current_user_id();
+    $current_user = wp_get_current_user();
+    $username = $current_user->user_login;
+    $token = generate_jwt_token($user_id, $username);
+    $send_data = array(
+        'token' => $token,
+        'event' => 'delete_order',
+        'from_who' => 'SHIP_KZ_WORD_PRESS',
+        'order_id' => $order_id);
+    $request_data = array(
+        'method' => 'POST',
+        'body' =>  json_encode($send_data),
+    );
+    $response = wp_remote_request($url, $request_data);
+    if (is_wp_error($response)) {
+        $error_message = $response->get_error_message();
+        $response_data = array('result' => 'error', 'message' => $error_message);
+    } else {
+        $response_data = array('result' => 'success', 'data' => wp_remote_retrieve_body($response));
+    }
+    wp_send_json($response_data);
+    wp_die();
+}

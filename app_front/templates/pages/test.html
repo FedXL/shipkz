@@ -3,28 +3,8 @@
 {% load static %}
 <h1>WebSocket Test</h1>
 
+{% include 'components/mini_messanger.html' %}
 
-    <input id="messageInput" type="text" placeholder="Enter your message here..." />
-    <button id="sendButton">Send</button>
-    <div id="messages"></div>
-
-    <script>
-        const socket = new WebSocket('ws://127.0.0.1:80/ws/messenger/');
-
-        socket.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            const message = data.message;
-            const messagesDiv = document.getElementById('messages');
-            messagesDiv.innerHTML += `<p>${message}</p>`;
-        };
-
-        document.getElementById('sendButton').onclick = function() {
-            const messageInput = document.getElementById('messageInput');
-            const message = messageInput.value;
-            socket.send(JSON.stringify({'message': message}));
-            messageInput.value = ''; // Очистка поля ввода
-        };
-    </script>
 
 {% endblock %}
 

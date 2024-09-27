@@ -140,9 +140,15 @@ body {
                 <div class="menu-item">
                     <a href="{% url 'tariffs' %}">Тарифы</a>
                 </div>
+                {% if user.is_authenticated %}
                 <div class="menu-item">
-                    <a href="{% url 'lk-start' %}">Вход в личный кабинет</a>
+                    <a href="{% url 'lk-start' %}">Личный кабинет</a>
                 </div>
+                {% else %}
+                <div class="menu-item">
+                    <a href="{% url 'login' %}">Вход</a>
+                </div>
+                {% endif %}
             </div>
         </nav>
    </header>

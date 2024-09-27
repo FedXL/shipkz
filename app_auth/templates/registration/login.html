@@ -1,7 +1,9 @@
 {% extends 'components/base.html' %}
+
 {% block title %}Вход{% endblock %}
 {% block content %}
-
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
 <div class="container">
     <h2 style="color: var(--main-color);">Login</h2>
     <form method="post">

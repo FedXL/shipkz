@@ -1,0 +1,105 @@
+<?php
+/*
+Plugin Name: My support plugin
+Description: БиблиотекА PHP-JWT my_welcome_message generate_jwt_token
+Version: 5055
+Author: Fedor Kuruts
+*/
+
+function my_welcome_message() {
+    echo '<div class="notice notice-success is-dismissible">
+        <p> Плагин PHP-JWT работает</p>
+    </div>';
+}
+
+add_action('admin_notices', 'my_welcome_message');
+require_once(plugin_dir_path(__FILE__) . 'vendor/autoload.php');
+
+
+function generate_jwt_token($user_id, $username) {
+    // Установите секретный ключ для подписи токена (должен быть долгим и сложным)
+    $secret_key = 'SuperPuperCriptoSecret!#!@)(*_)%$ADawdawW:';
+    $current_time = time();
+    $expiration_time = $current_time + 20;
+    $payload = array(
+        "user_id" => $user_id,
+        "username" => $username,
+        "current_time" => $current_time,
+        "exp" => $expiration_time
+    );
+    $token = \Firebase\JWT\JWT::encode($payload, $secret_key, 'HS256');
+    return $token;
+}
+function get_my_api_url() {
+    $url = "https://supportstation.kz/api/webhook/";
+    return $url;
+}
+
+function generateRandomName($length) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $name = '';
+    $charLength = strlen($characters);
+
+    for ($i = 0; $i < $length; $i++) {
+        $name .= $characters[rand(0, $charLength - 1)];
+    }
+    return $name;
+}
+
+
+function get_my_api_access_url(){
+	$url = "https://supportstation.kz/api/access/";
+	return $url;
+}
+
+function get_exchange_url(){
+	$url = "https://supportstation.kz/api/free-zone/exchange/";
+	return $url;
+}
+
+function get_wss(){
+	$wss = "wss://supportstation.kz/ws/";
+	return $wss;
+}
+
+function get_menu_wss(){
+	$wss = "wss://supportstation.kz/ws2/";
+	return $wss;
+}
+
+
+function unread_messages_counter(){
+    $webhook_url =  get_my_api_url();
+    $current_user = wp_get_current_user();
+    $current_user_id = get_current_user_id();
+    $user_login = $current_user->user_login;
+    $token = generate_jwt_token($current_user_id, $user_login);
+    $send_data = array(
+        'token' => $token,
+        'event' => 'ReadMessagesInfo',
+        'from_who' => 'SHIP_KZ_WORD_PRESS',
+    );
+    $request_data = array(
+        'method' => 'POST',
+        'body' =>  json_encode($send_data),
+    );
+    $response = wp_remote_request($webhook_url, $request_data);
+    if (is_wp_error($response)) {
+        $error_message = $response->get_error_message();
+        return array('result' => 'error', 'message' => $error_message);
+    } else {
+        $body_response = wp_remote_retrieve_body($response);
+
+        if ($body_response) {
+            $body = json_decode($body_response, true);
+            $response_data = array('result' => 'success', 'data' => $body);
+            return $response_data;
+        } else {
+            return array('result' => 'error', 'message' => 'No data received from the API');
+        }
+    }
+}
+
+
+
+
