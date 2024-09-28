@@ -1,0 +1,192 @@
+
+
+
+
+function send_request_on_page_load_not_yet() {
+    $api_url =  get_my_api_url();
+    $current_user = wp_get_current_user();
+    $current_user_id = get_current_user_id();
+    $user_login = $current_user->user_login;
+    $token = generate_jwt_token($current_user_id, $user_login);
+    $send_data = array("token" => $token, "event" => "load_orders","is_paid" => "not_yet");
+    $response = wp_remote_post($api_url, array(
+        'body' => json_encode($send_data),
+        'headers' => array('Content-Type' => 'application/json'),
+    ));
+
+    if (is_wp_error($response)) {
+        echo "Ошибка при отправке запроса: " . $response->get_error_message();
+    } else {
+        $response_body = wp_remote_retrieve_body($response);
+        $data = json_decode($response_body);
+        if ($data === null) {
+            echo "Ошибка при декодировании JSON данных.";
+        } else {
+            return $data;
+        }
+    }
+};
+
+
+
+function create_not_payed_orders() {
+    $order_data=send_request_on_page_load_not_yet();
+    $data_array = json_decode($order_data, true);
+    $ajax_url = admin_url('admin-ajax.php');
+
+echo '
+<style>
+
+    a {
+        text-decoration: none !important;
+    }
+    strong {
+        font-weight: bold;
+    }
+     table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0 !important;
+
+    }
+
+    /* Стиль для заголовков таблицы */
+    th {
+        background-color: #333;
+        color: #fff;
+        font-weight: bold;
+        padding: 10px;
+    }
+
+    /* Стиль для ячеек таблицы */
+    td {
+        border: 1px solid #ddd;
+    }
+
+    .orderContainer{
+        display: flex;
+         align-items: stretch;
+
+
+    }
+    .tableContainer{
+        flex-grow: 1;
+        border: 1px solid #ddd;
+    }
+    .orderName{
+
+    }
+
+    .deleteButton {
+    width: 100px;
+    color: white; /* Белый цвет шрифта */
+    background-color: lightblue !important; /* Фоновый цвет кнопки */
+    border: none; /* Убираем границу */
+    padding: 5px 10px; /* Поля вокруг текста кнопки */
+    cursor: pointer; /* Изменение курсора при наведении */
+    transition: background-color 0.3s; /* Плавное изменение цвета фона при наведении */
+}
+
+    .deleteButton:hover {
+    background-color: lightgray !important;
+    transform: scale(1.2);
+}
+
+
+</style>
+';
+
+
+
+
+foreach ($data_array as $key => $value) {
+
+    echo '<div class = "superContainer" id="cont_'. $value['id']  .'">';
+
+    echo'<div class="orderName">
+                     <strong>Заявка № ' . $value['id'] . '</strong> Дата заявки: ' . $value['time'] . ' (from ' . $value['body']['country']  . ')
+                     <button class = "deleteButton" order_id="'. $value['id'] . '"  id="deleteButton_' . $value['id'] . '">Удалить</button>
+
+        </div>';
+
+
+    echo'<div class="orderContainer">
+        <div class="tableContainer">
+            <table>
+                    <tr>
+                        <td> Позиция </td>
+                        <td> Количество </td>
+                        <td> Комментарий </td>
+                    </tr>';
+
+    $item_info = $value['body'];
+    $item_arrey = $item_info['items'];
+
+    foreach($item_arrey as $key2 => $item_value) {
+        echo '
+                    <tr>
+                        <td> <a class="mychref" href="' . $item_value['url'] . '"> Товар-'  . $key2 .'</a></td>
+                        <td> ' . $item_value['amount'] . '</td>
+                        <td> ' . $item_value['comment'] . '</td>
+                    </tr>
+                    ';};
+    echo '  </table>
+        </div>';
+
+    echo '</div></div><br>';
+};
+
+
+
+
+?>
+
+
+<script type="text/javascript">
+
+    document.addEventListener("DOMContentLoaded", function() {
+        function clickFunction(event) {
+            console.log('click');
+            let target = event.target;
+            let order_id = target.getAttribute('order_id');
+            let task = "action=delete_order&order_id=" + order_id;
+            console.log(task);
+
+            const promise = fetch("<?php echo $ajax_url; ?>", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                },
+                body: "action=delete_order&order_id=" + String(order_id),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // вывод данных ответа сервера в консоль для проверки
+
+                    let deleted_element = 'cont_' + String(order_id);
+                    let element = document.getElementById(deleted_element);
+                    if (element) {
+                        element.remove();
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка при выполнении запроса:');
+                    error = JSON.parse(error);
+                    console.error(error);
+                });
+
+            console.log(promise);
+        }
+
+        const deleteButtons = document.getElementsByClassName('deleteButton');
+        console.log(deleteButtons);
+
+        for (let i = 0; i < deleteButtons.length; i++) {
+            deleteButtons[i].addEventListener('click', clickFunction);
+        }
+    });
+
+</script>
+
+<?php
+}

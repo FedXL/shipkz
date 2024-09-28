@@ -207,15 +207,6 @@ class Services(models.Model):
         db_table = 'services'
 
 
-class UserMain(models.Model):
-    first_name = models.CharField(max_length=50, blank=True, null=True)
-    second_name = models.CharField(max_length=50, blank=True, null=True)
-    third_name = models.CharField(max_length=50, blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'user_main'
 
 
 class Users(models.Model):

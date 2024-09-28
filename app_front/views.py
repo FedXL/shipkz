@@ -139,3 +139,97 @@ class LkLogoutPageView(View):
 
 def testing_view(request):
     return render(request, 'pages/test.html')
+
+
+def make_text_for_status(data):
+    """-заказ выкуплен в магазине
+- заказ отправлен в казахстан (получен трек)  / заказ в пути
+- заказ поступил на территорию казахстана
+- заказ получен для последующей отправки
+- заказ отправлен в рф
+- закз получен клиентом"""
+
+    order_status_info = data.get('order_status_info')
+    is_forwarder = order_status_info.get('is_forwarder_way')
+    check_list_1 = [
+        'arrived_to_forwarder',
+        'send_to_host_country',
+        'received_in_host_country',
+        'send_to_ru'
+
+    ]
+
+    check_list_2 = [
+        'send_to_host_country',
+        'arrived_to_host_country',
+        'received_in_host_country',
+        'send_to_ru'
+    ]
+
+    if is_forwarder:
+        check_list = check_list_1
+    else:
+        check_list = check_list_2
+
+    result = {}
+    count = 2
+    for check in check_list:
+        data = order_status_info.get(check)
+        if data:
+            result[count] = True
+        else:
+            result[count] = False
+        count += 1
+    return result
+
+
+# async def get_orders_by_username(username: str, variant='paid'):
+#     async with AsyncSession(async_engine) as session:
+#         async with session.begin():
+#             stmt = select(WebUser.user_id).where(WebUser.web_username == username)
+#             query = await session.execute(stmt)
+#             web_user_id = query.scalar_one_or_none()
+#             if not web_user_id:
+#                 return False, f"Cant to find user with {username}"
+#             stmt = (select(Order, OrderStatusInfo)
+#                     .select_from(join(Order, OrderStatusInfo, Order.id == OrderStatusInfo.order_id, isouter=True))
+#                     .where(Order.web_user == web_user_id)
+#                     .order_by(desc(Order.id)))
+#             result_all = await session.execute(stmt)
+#             rows = result_all.fetchall()
+#             orders_list = []
+#             match variant:
+#                 case "paid":
+#                     for row in rows:
+#                         _order = row[0]
+#                         _order_dict = _order.to_dict()
+#                         sring = _order.body
+#                         _order_dict['body'] = json.loads(sring)
+#                         _status = row[1]
+#                         if _status:
+#                             _status_dict = _status.to_dict()
+#                             result_dict = {**_order_dict, 'order_status_info': {**_status_dict}}
+#                             status_check = make_text_for_status(result_dict)
+#                             result_dict['order_status_info']['progres_bar'] = status_check
+#                             if result_dict['order_status_info']['host_country'] == 'KAZAKHSTAN':
+#                                 result_dict['order_status_info']['host_country'] = 'Казахстан'
+#                             elif result_dict['order_status_info']['host_country'] == 'KYRGYZSTAN':
+#                                 result_dict['order_status_info']['host_country'] = 'Кыргызстан'
+#                                 orders_list.append(result_dict)
+#                             orders_list.append(result_dict)
+#                         else:
+#                             continue
+#                 case 'not_yet':
+#                     for row in rows:
+#                         _order = row[0]
+#                         _order_dict = _order.to_dict()
+#                         sring = _order.body
+#                         _order_dict['body'] = json.loads(sring)
+#                         _status = row[1]
+#                         if _status:
+#                             continue
+#                         else:
+#                             result_dict = {**_order_dict}
+#                             orders_list.append(result_dict)
+#
+#     return orders_list

@@ -4,7 +4,7 @@ from .models import (
     AlembicVersion, Buyers, Discounts,
     Documents, EmailTask, Exchange, FastAnswers,
     Jwt, Managers, Messages, OrderStatus, OrderStatusInfo, Orders, ParceTask,
-    Photos, Posts, RootUsers, Services, UserMain, Users, UsersApp, WebDocs,
+    Photos, Posts, RootUsers, Services,  Users, UsersApp, WebDocs,
     WebMessages, WebPhotos, WebUsers, WebUsersMeta, Websockets, WebsocketsSupport
 )
 
@@ -70,8 +70,6 @@ class RootUsersAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
 class ServicesAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = [field.name for field in Services._meta.fields]
 
-class UserMainAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
-    list_display = [field.name for field in UserMain._meta.fields]
 
 class UsersAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = [field.name for field in Users._meta.fields]
@@ -118,7 +116,6 @@ admin.site.register(Photos, PhotosAdmin)
 admin.site.register(Posts, PostsAdmin)
 admin.site.register(RootUsers, RootUsersAdmin)
 admin.site.register(Services, ServicesAdmin)
-admin.site.register(UserMain, UserMainAdmin)
 admin.site.register(Users, UsersAdmin)
 admin.site.register(UsersApp, UsersAppAdmin)
 admin.site.register(WebDocs, WebDocsAdmin)
