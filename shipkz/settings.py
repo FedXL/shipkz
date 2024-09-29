@@ -3,10 +3,11 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_URL = "127.0.0.1:80"
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 ALLOWED_HOSTS = ['localhost','127.0.0.1']
-
+AUTH_USER_MODEL = 'app_auth.CustomUser'
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -23,9 +24,8 @@ INSTALLED_APPS = [
     'channels',
     'rest_framework',
 ]
+
 SITE_ID = 1
-
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -60,7 +60,6 @@ WSGI_APPLICATION = 'shipkz.wsgi.application'
 ASGI_APPLICATION = 'shipkz.asgi.application'
 
 DATABASES = {
-
     'default': {
         'ENGINE': os.getenv('POSTGRES_ENGINE'),
         'NAME': os.getenv('POSTGRES_NAME'),
@@ -70,6 +69,13 @@ DATABASES = {
         'PORT': os.getenv('POSTGRES_PORT'),
     }
 }
+#
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 # DATABASE_ROUTERS = ['shipkz.db_router.DatabaseRouter']
 AUTH_PASSWORD_VALIDATORS = [
     {

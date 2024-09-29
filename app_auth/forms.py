@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.models import User  # Используем встроенную модель User в Django
+from app_auth.models import CustomUser
+
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=100, label="Username")
@@ -8,19 +9,17 @@ class LoginForm(forms.Form):
 
 class RegistrationForm(forms.Form):
 
-    username = forms.CharField(max_length=100, label="Username")
-    email = forms.EmailField(label="Email")
-    password = forms.CharField(widget=forms.PasswordInput, label="Password")
-    password_confirm = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+    username = forms.CharField(max_length=100, label="Логин", required=True)
+    email = forms.EmailField(label="Почта", required=True)
+    password = forms.CharField(widget=forms.PasswordInput, label="Пароль", required=True)
+    password_confirm = forms.CharField(widget=forms.PasswordInput, label="Подтверждение пароля", required=True)
 
-    phone = forms.CharField(max_length=15, label="Phone")
-    billing_address = forms.CharField(max_length=255, label="Billing Address")
-    first_name = forms.CharField(max_length=100, label="First Name")
-    last_name = forms.CharField(max_length=100, label="Last Name")
-    omg_name = forms.CharField(max_length=100, label="OMG Name")
 
-    cdek_address = forms.CharField(max_length=255, label="CDEK Address")
-
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if CustomUser.objects.filter(username=username).exists():
+            raise forms.ValidationError('Пользователь с таким логином уже существует')
+        return username
 
     def clean(self):
         cleaned_data = super().clean()
@@ -28,13 +27,15 @@ class RegistrationForm(forms.Form):
         password_confirm = cleaned_data.get('password_confirm')
 
         if password and password_confirm and password != password_confirm:
-            raise forms.ValidationError('Passwords do not match')
+            raise forms.ValidationError('Пароли не совпадают')
         return cleaned_data
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password"])
-        if commit:
-            user.save()
-        return user
+
+class ProfileForm(forms.Form):
+    first_name = forms.CharField(max_length=100, label="Имя", required=False)
+    last_name = forms.CharField(max_length=100, label="Фамилия", required=False)
+    patronymic_name = forms.CharField(max_length=100, label="Отчество", required=False)
+    phone = forms.CharField(max_length=15, label="Телефон", required=False)
+    address = forms.CharField(max_length=255, label="Адрес", required=False)
+    telegram_id = forms.IntegerField(label="Telegram ID", required=False)
 

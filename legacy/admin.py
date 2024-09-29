@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db import models
 from .models import (
-    AlembicVersion, Buyers, Discounts,
+     Buyers, Discounts,
     Documents, EmailTask, Exchange, FastAnswers,
     Jwt, Managers, Messages, OrderStatus, OrderStatusInfo, Orders, ParceTask,
     Photos, Posts, RootUsers, Services,  Users, UsersApp, WebDocs,
@@ -16,8 +16,7 @@ class ReadOnlyAdminMixin:
                 readonly_fields += (field.name,)
         return readonly_fields
 
-class AlembicVersionAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
-    list_display = [field.name for field in AlembicVersion._meta.fields]
+
 
 class BuyersAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = [field.name for field in Buyers._meta.fields]
@@ -98,7 +97,7 @@ class WebsocketsAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
 class WebsocketsSupportAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = [field.name for field in WebsocketsSupport._meta.fields]
 
-admin.site.register(AlembicVersion, AlembicVersionAdmin)
+
 admin.site.register(Buyers, BuyersAdmin)
 admin.site.register(Discounts, DiscountsAdmin)
 admin.site.register(Documents, DocumentsAdmin)

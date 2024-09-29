@@ -137,3 +137,20 @@
     max-width: 350px;
 
 }
+
+.max_length {
+    max-width: 300px;
+    margin: 0 auto;
+}
+.row-container.good-input input{
+    color: green; /* Цвет текста */
+    border: 2px solid green; /* Зеленая рамка */
+    background-color: #e0f7e0; /* Светло-зеленый фон */
+}
+
+/* Стили для элемента с классом bad-input */
+.row-container.bad-input input {
+    color: red; /* Цвет текста */
+    border: 2px solid red; /* Красная рамка */
+    background-color: #f8d7da; /* Светло-красный фон */
+}

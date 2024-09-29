@@ -35,7 +35,7 @@
         <li>жидкости и смазки</li>
         <li>и многое другое</li>
     </ul>
-   <p>Мы съэкономим вам много времени и нервов, и вы не узнаете с удивлением что ваш рюкзак за 20$ входит в санкционный список.
+   <p>Мы сэкономим вам много времени и нервов, и вы не узнаете с удивлением что ваш рюкзак за 20$ входит в санкционный список.
        С нами не нужно заполнять декларацию, прикладывать инвойсы и делать кучу мелких операций,
        которые от вас требуют стандартные форвардеры, все эти заботы мы берем на себя.</p>
 
@@ -49,14 +49,20 @@
 
     <img src="{% static 'images/site-image.jpg' %}" alt="Parallax Image"
          style="max-width: 100%; height: auto; display: block; margin:auto;">
-
+{% if user.email_verified %}
+{% include 'components/reg_form.html' %}
+{% else %}
 {% include 'components/unreg_form.html' %}
+{% endif %}
+
 
 <style>
 .youtube-container {
     display: flex;
     flex-wrap: wrap;
+
 }
+
 
 .youtube-link {
     flex: 1 1 230px; /* Элемент занимает минимум 230px */
@@ -66,7 +72,9 @@
     overflow: hidden; /* Скрыть часть изображения, если оно выходит за пределы контейнера */
     perspective: 1000px; /* Задает перспективу для дочерних элементов */
 }
+.youtube-link a{
 
+}
 .youtube-link img {
     max-width: 100%;
     height: auto;
@@ -81,43 +89,43 @@
 </style>
 
 <div class="youtube-container">
-    <div class="youtube-link">
-        <a href="https://www.youtube.com/shorts/iTc2IKdYfcs">
+    <div class="youtube-link" >
+        <a href="https://www.youtube.com/shorts/iTc2IKdYfcs"  target="_blank">
             <img src="{% static 'images/youtube/1.jpg' %}" alt="youtube">
         </a>
     </div>
     <div class="youtube-link">
-        <a href="https://www.youtube.com/shorts/Q0l-jq1DSPU">
+        <a href="https://www.youtube.com/shorts/Q0l-jq1DSPU" target="_blank">
             <img src="{% static 'images/youtube/2.jpg' %}" alt="youtube">
         </a>
     </div>
     <div class="youtube-link">
-        <a href="https://www.youtube.com/shorts/VLpewU19Duk">
+        <a href="https://www.youtube.com/shorts/VLpewU19Duk" target="_blank">
             <img src="{% static 'images/youtube/3.jpg' %}" alt="youtube">
         </a>
     </div>
     <div class="youtube-link">
-        <a href="https://www.youtube.com/watch?v=hzDWdpspuvc&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY">
+        <a href="https://www.youtube.com/watch?v=hzDWdpspuvc&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
             <img src="{% static 'images/youtube/4.jpg' %}" alt="youtube">
         </a>
     </div>
     <div class="youtube-link">
-        <a href="https://www.youtube.com/watch?v=_67kMEUVNrI&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY">
+        <a href="https://www.youtube.com/watch?v=_67kMEUVNrI&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
             <img src="{% static 'images/youtube/5.jpg' %}" alt="youtube">
         </a>
     </div>
     <div class="youtube-link">
-        <a href="https://www.youtube.com/watch?v=e_1CDUk1Tz4&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY">
+        <a href="https://www.youtube.com/watch?v=e_1CDUk1Tz4&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
             <img src="{% static 'images/youtube/6.jpg' %}" alt="youtube">
         </a>
     </div>
     <div class="youtube-link">
-        <a href="https://www.youtube.com/watch?v=6V3kGQ3E9aA&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY">
+        <a href="https://www.youtube.com/watch?v=6V3kGQ3E9aA&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
             <img src="{% static 'images/youtube/7.jpg' %}" alt="youtube">
         </a>
     </div>
     <div class="youtube-link">
-        <a href="https://www.youtube.com/watch?v=6WwFLCDs9fY&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY">
+        <a href="https://www.youtube.com/watch?v=6WwFLCDs9fY&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
             <img src="{% static 'images/youtube/8.jpg' %}" alt="youtube">
         </a>
     </div>

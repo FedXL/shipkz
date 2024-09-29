@@ -4,14 +4,26 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/form.css' %}">
 <div class="container">
-    <h2 style="color: var(--main-color);">Login</h2>
-    <form method="post">
+
+    <form method="post" class="order-form max_length">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" style="background-color: var(--main-color); color: white;">Login</button>
-    </form>
-    <div class="register-link">
-        Don't have an account? <a href="{% url 'signup' %}" style="color: var(--main-color);">Register here</a>
+    <h2 class="mark-main-color">Вход</h2>
+            {% for field in form %}
+            <div class="row-container">
+                <div class="input-container">
+                    <label for="{{ field.id_for_label }}" class="input_explain">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            </div>
+            {% endfor %}
+        {% if form.non_field_errors %}
+        <div class="error">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <button type="submit" class="submit-button">Вход</button>
+        <div class="register-link">
+        Нет учетной записи? <a href="{% url 'signup' %}" class="mark-main-color">Регистрация</a>
     </div>
+    </form>
+
 </div>
 {% endblock %}

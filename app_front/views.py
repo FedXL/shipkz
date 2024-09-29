@@ -1,12 +1,13 @@
 import json
-
 from django.forms import formset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+
+from app_auth.mixins import ActiveUserConfirmMixin
+from app_auth.mixins import EmailVerificationRequiredMixin
 from app_front.forms import UnregisteredOrderForm, OrderForm, RegisterOrderItemForm
-from app_front.mixins import ActiveUserConfirmMixin
 from app_front.utils import generate_jwt_token
 from legacy.models import Exchange
 
@@ -85,11 +86,13 @@ class ContactsPageView(View):
     def get(self, request):
         return render(request, 'pages/contacts.html')
 
-class LkHelloPageView(ActiveUserConfirmMixin,View):
+class LkHelloPageView(ActiveUserConfirmMixin,
+                    EmailVerificationRequiredMixin,
+                      View):
     def get(self, request):
         return render(request, 'lk-pages/lk-hello-page.html')
 
-class LkCreateOrderPageView(ActiveUserConfirmMixin,View):
+class LkCreateOrderPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixin,View):
     def get(self, request):
         RegisterOrderItemFormSet = formset_factory(RegisterOrderItemForm, extra=1, max_num=10)
         if request.method == 'POST':
@@ -113,19 +116,19 @@ class LkCreateOrderPageView(ActiveUserConfirmMixin,View):
             'formset': formset,
         })
 
-class LkOrdersPageView(ActiveUserConfirmMixin, View):
+class LkOrdersPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixin, View):
     def get(self, request):
         return render(request, 'lk-pages/lk-orders-page.html')
 
-class LkPreordersPageView(ActiveUserConfirmMixin, View):
+class LkPreordersPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixin, View):
     def get(self, request):
         return render(request, 'lk-pages/lk-pre-orders-page.html')
 
-class LkProfilePageView(View):
+class LkProfilePageView(ActiveUserConfirmMixin,View):
     def get(self, request):
         return render(request, 'lk-pages/lk-profile-page.html')
 
-class LkMessagesPageView(ActiveUserConfirmMixin, View):
+class LkMessagesPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixin, View):
     def get(self, request):
         token=generate_jwt_token(1, 'admin')
         return render(request,
