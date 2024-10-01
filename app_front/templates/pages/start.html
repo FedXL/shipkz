@@ -47,20 +47,25 @@
 
 {% include 'components/yandex_map.html' %}
 
-    <img src="{% static 'images/site-image.jpg' %}" alt="Parallax Image"
-         style="max-width: 100%; height: auto; display: block; margin:auto;">
-{% if user.email_verified %}
-{% include 'components/reg_form.html' %}
+<img src="{% static 'images/site-image.jpg' %}" alt="Parallax Image" style="max-width: 100%; height: auto; display: block; margin:auto;">
+
+
+{% if user.is_active %}
+    {% if user.email_verified %}
+        {% include 'components/reg_form.html' %}
+    {% else %}
+        {% include 'components/unreg_form.html' %}
+    {% endif %}
 {% else %}
-{% include 'components/unreg_form.html' %}
+    {% include 'components/unreg_form.html' %}
 {% endif %}
+
 
 
 <style>
 .youtube-container {
     display: flex;
     flex-wrap: wrap;
-
 }
 
 
@@ -73,6 +78,7 @@
     perspective: 1000px; /* Задает перспективу для дочерних элементов */
 }
 .youtube-link a{
+
 
 }
 .youtube-link img {

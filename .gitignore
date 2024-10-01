@@ -20,15 +20,12 @@ coverage.xml
 celerybeat-schedule
 instance/
 .webassets-cache
-
-# IDE
+legacy/legacy_codebase/**
 .idea/
 .vscode/
 *.swp
 *.swo
 *.swn
-
-# Django
 *.log
 *.pot
 *.py[cod]
@@ -37,23 +34,12 @@ instance/
 *.sqlite3
 db.sqlite3
 media/
-
-
-# Django environment variables
 .env
 .env.local
 .env.production
 .env.test
 .env.*
-
-# Pipenv
 Pipfile.lock
-
-# poetry
 poetry.lock
-
-# macOS
 .DS_Store
-
-# Windows
 Thumbs.db

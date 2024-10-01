@@ -7,11 +7,22 @@
     <div class="form-country">
         {% for choice in form.where_to %}
             <label class="radio-img" for="radio-{{ choice.data.value }}">
-                <input type="radio" id="radio-{{ choice.data.value }}" name="where_to" value="{{ choice.data.value }}" style="display:none;">
+                <input type="radio" id="radio-{{ choice.data.value }}" name="where_to" value="{{ choice.data.value }}" style="display:none;" required>
                 <img src="{% static '/images/flags' %}/{{ choice.data.value }}.jpg?v={{version}}" title="{{ choice.choice_label }}">
             </label>
         {% endfor %}
     </div>
+
+           {% if form.errors %}
+        <ul class="error-list">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     {{ formset.management_form }}
     <div id="formset-container">
         {% for form in formset %}
@@ -28,6 +39,16 @@
                     <span class="input_explain">{{form.comment.label}}</span>
                     {{form.comment}}
                 </div>
+
+    {% if formset.errors %}
+        <ul class="error-list">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% endif %}
 
                 <button class="control-form-button remove-form" type="button">Удалить товар</button>
             </div>

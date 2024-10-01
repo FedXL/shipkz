@@ -145,6 +145,9 @@ body {
                 <div class="menu-item">
                     <a href="{% url 'lk-start' %}">Личный кабинет</a>
                 </div>
+                <div class="menu-item">
+                    <a href="{% url 'logout' %}">Выход</a>
+                </div>
                 {% else %}
                 <div class="menu-item">
                     <a href="{% url 'login' %}">Вход</a>

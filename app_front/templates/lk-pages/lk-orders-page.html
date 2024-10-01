@@ -1,4 +1,32 @@
 {% extends 'components/lk-base.html' %}
 {% block lk_content %}
     <h2>ВАШИ ЗАКАЗЫ</h2>
+
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Номер заказа</th>
+                <th scope="col">Дата заказа</th>
+                <th scope="col">Статус заказа</th>
+                <th scope="col">Сумма заказа</th>
+                <th scope="col">Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in data %}
+                <tr>
+                    <th scope="row">{{ order.id }}</th>
+                    <td>{{ order.created_at }}</td>
+                    <td>{{ order.status }}</td>
+                    <td>{{ order.total_price }}</td>
+                     <td>{{order.body}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block scripts %}
+
 {% endblock %}

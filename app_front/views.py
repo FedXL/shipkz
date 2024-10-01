@@ -1,16 +1,22 @@
 import json
 from django.forms import formset_factory
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views import View
 
+from app_auth.forms import ProfileModelForm
 from app_auth.mixins import ActiveUserConfirmMixin
 from app_auth.mixins import EmailVerificationRequiredMixin
-from app_front.forms import UnregisteredOrderForm, OrderForm, RegisterOrderItemForm
+from app_auth.models import Profile
+from app_front.forms import UnregisteredOrderForm, OrderForm, RegisterOrderItemForm, RegisterOrderItemFormSet
+from app_front.management.orders.ai_try import my_logger
+from app_front.management.unregister_authorization.token import check_token
+from app_front.management.unregister_authorization.unregister_web_users import get_unregister_web_user
+from app_front.management.utils import get_user_ip
 from app_front.utils import generate_jwt_token
-from legacy.models import Exchange
-
+from legacy.models import Exchange, WebUsers, Orders
+from legacy.serializers import OrdersSerializer
 
 class TariffsPageView(View):
     """
@@ -63,15 +69,61 @@ class TariffsPageView(View):
                       template_name='pages/tariffs.html',
                       context={'data': data})
 
-class StartingPageView(View):
+class BaseOrderView(View):
+    template_name = ""
     def get(self, request):
-        form = UnregisteredOrderForm()
-        return render(request, 'pages/start.html', {'form': form})
+        customer = request.user
+        if  customer.is_authenticated and customer.email_verified:
+            form = OrderForm()
+            formset = RegisterOrderItemFormSet()
+            pointer = 'registered'
+            return render(request, self.template_name, {'form': form, 'formset': formset, 'pointer': pointer})
+        else:
+            pointer = 'unregistered'
+            form = UnregisteredOrderForm()
+            return render(request, self.template_name, {'form': form, 'pointer': pointer})
 
-class KazakhstanPageView(View):
-    def get(self, request):
-        form = UnregisteredOrderForm()
-        return render(request, 'pages/kazakhstan.html', {'form': form})
+    def post(self, request):
+        customer = request.user
+        if customer.is_authenticated and customer.email_verified:
+            form = OrderForm(request.POST)
+            formset = RegisterOrderItemFormSet(request.POST)
+            pointer = 'registered'
+        else:
+            form = UnregisteredOrderForm(request.POST)
+            formset = None
+            pointer = 'unregistered'
+        if form.is_valid() and  (formset is None or formset.is_valid()):
+            data = form.cleaned_data
+            user_ip = get_user_ip(request)
+            form_data = form.cleaned_data
+            if pointer == 'unregistered':
+                my_logger.info(request.session)
+                shipkz_authorization = request.COOKIES.get('ShipKZAuthorization',None)
+                if shipkz_authorization:
+                    decoder_token = check_token(shipkz_authorization)
+                    username = decoder_token.get('username')
+                username = "UNREG_" + str(session_number)
+                web_user, create = WebUsers.objects.get_or_create(web_username=username)
+                order = Orders.objects.create(
+                    type='WEB_ORDER',
+                    body=form_data,
+                    user_ip=user_ip,
+                    web_user=web_user
+                )
+
+
+            return render(request,template_name='pages/success.html',context={"pointer":pointer,"result":"success","data":data})
+        else:
+            return render(request,template_name=self.template_name,context={'form': form, 'formset': formset, 'pointer': pointer})
+
+
+class StartingPageView(BaseOrderView):
+    template_name = 'pages/start.html'
+
+class KazakhstanPageView(BaseOrderView):
+    template_name = 'pages/kazakhstan.html'
+
 
 class TradeinnPageView(View):
     def get(self, request):
@@ -85,6 +137,11 @@ class AboutUsPageView(View):
 class ContactsPageView(View):
     def get(self, request):
         return render(request, 'pages/contacts.html')
+
+
+
+
+
 
 class LkHelloPageView(ActiveUserConfirmMixin,
                     EmailVerificationRequiredMixin,
@@ -116,17 +173,37 @@ class LkCreateOrderPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixi
             'formset': formset,
         })
 
-class LkOrdersPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixin, View):
+class LkOrdersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
     def get(self, request):
-        return render(request, 'lk-pages/lk-orders-page.html')
+        data=get_orders_by_username(request.user.username)
+        return render(request, 'lk-pages/lk-orders-page.html',context={'data':data})
 
-class LkPreordersPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixin, View):
+class LkPreordersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
     def get(self, request):
         return render(request, 'lk-pages/lk-pre-orders-page.html')
 
-class LkProfilePageView(ActiveUserConfirmMixin,View):
+
+class LkProfilePageView(View):
     def get(self, request):
-        return render(request, 'lk-pages/lk-profile-page.html')
+        user = request.user
+        if user.is_anonymous:
+            return HttpResponseRedirect(reverse('login'))
+
+        profile = get_object_or_404(Profile, user=user)
+        form = ProfileModelForm(instance=profile)
+        return render(request, 'lk-pages/lk-profile-page.html', {'form': form})
+
+    def post(self, request):
+        user = request.user
+        if user.is_anonymous:
+            return HttpResponseRedirect(reverse('login'))
+
+        profile = get_object_or_404(Profile, user=user)
+        form = ProfileModelForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('lk-profile')
+        return render(request, 'lk-pages/lk-profile-page.html', {'form': form})
 
 class LkMessagesPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixin, View):
     def get(self, request):
@@ -184,6 +261,14 @@ def make_text_for_status(data):
             result[count] = False
         count += 1
     return result
+
+def get_orders_by_username(username):
+    web_user = WebUsers.objects.filter(web_username=username).first()
+    orders = Orders.objects.filter(web_user=web_user).order_by('-id')
+    serializer = OrdersSerializer(orders, many=True)
+    serialized_data = serializer.data
+    return serialized_data
+
 
 
 # async def get_orders_by_username(username: str, variant='paid'):

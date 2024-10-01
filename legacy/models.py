@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 class Buyers(models.Model):
@@ -136,15 +137,19 @@ class Orders(models.Model):
     buyer = models.ForeignKey(Buyers, models.DO_NOTHING, db_column='buyer', blank=True, null=True)
     type = models.CharField(max_length=255, blank=True, null=True)
     body = models.TextField(blank=True, null=True)
-    time = models.DateTimeField(blank=True, null=True)
+    time = models.DateTimeField(blank=True, null=True, auto_now_add=True)
+
     web_user = models.ForeignKey('WebUsers', models.DO_NOTHING, db_column='web_user', blank=True, null=True)
     status = models.CharField(max_length=100, blank=True, null=True)
     user_ip = models.CharField(max_length=100, blank=True, null=True)
 
+    def clean(self):
+        if not self.client and not self.web_user:
+            raise ValidationError('Either client or web_user must be filled.')
+
     class Meta:
         managed = False
         db_table = 'orders'
-
 
 class ParceTask(models.Model):
     order = models.ForeignKey(Orders, models.DO_NOTHING, blank=True, null=True)
@@ -176,8 +181,6 @@ class Posts(models.Model):
     class Meta:
         managed = False
         db_table = 'posts'
-
-
 
 
 class Services(models.Model):
@@ -226,8 +229,9 @@ class WebDocs(models.Model):
 class WebUsers(models.Model):
     user_id = models.AutoField(primary_key=True)
     user_name = models.CharField(max_length=255, blank=True, null=True)
+
     web_username = models.CharField(unique=True, max_length=255, blank=True, null=True)
-    is_kazakhstan = models.BooleanField(blank=True, null=True)
+    is_kazakhstan = models.BooleanField(blank=True, null=True, default=True)
     last_online = models.DateTimeField(blank=True, null=True)
     last_message_telegramm_id = models.BigIntegerField(blank=True, null=True)
 

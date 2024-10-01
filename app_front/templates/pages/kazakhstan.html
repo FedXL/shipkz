@@ -23,7 +23,15 @@
 <h3>Доставка из Казахстана в РФ</h3>
 <p>Из Казахстана в РФ мы отправляем ваши заказы с помощью транспортной компании СДЭК по расценкам интернет-магазинов.</p>
 
-{% include 'components/reg_form.html' %}
+{% if user.is_active %}
+    {% if user.email_verified %}
+        {% include 'components/reg_form.html' %}
+    {% else %}
+        {% include 'components/unreg_form.html' %}
+    {% endif %}
+{% else %}
+    {% include 'components/unreg_form.html' %}
+{% endif %}
 
 
 <h2>СПИСОК ЗАПРЕЩЕННЫХ К ПЕРЕСЫЛКЕ ТОВАРОВ ИЗ США:</h2>

@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import  AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -6,13 +5,15 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import CreateView, TemplateView, FormView
+from django.views.generic import  FormView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.exceptions import ObjectDoesNotExist
 from app_auth.forms import RegistrationForm
-from app_auth.models import CustomUser
+from app_auth.models import CustomUser, Profile
+from legacy.models import WebUsers
+from app_auth.tasks import  send_verification_email_task
 
 
 class LoginView(FormView):
@@ -40,11 +41,17 @@ class SignUpView(View):
         if form.is_valid():
             user = CustomUser(
                 username=form.cleaned_data['username'],
-                email=form.cleaned_data['email'],
-        )
+                email=form.cleaned_data['email'],)
             user.set_password(form.cleaned_data['password'])
             user.save()
+            web_user = WebUsers.objects.create(web_username=form.cleaned_data['username'],
+                                               user_name=form.cleaned_data['username'],)
+            profile = Profile(user=user,email=form.cleaned_data['email'],web_user=web_user)
+            profile.save()
             login(request, user)
+            send_verification_email_task.delay(to_mail=user.email,
+                                               user=user.username,
+                                               token=user.verification_token)
             return HttpResponseRedirect(self.success_url)
         return render(request, self.template_name, {'form': form})
 
@@ -67,19 +74,20 @@ class ConfirmEmailMessageView(LoginRequiredMixin, View):
                           context={'user_email': user.email})
 
 
-# class ConfirmEmailApiView(APIView):
-#     def get(self, request, *args, **kwargs):
-#         token = request.query_params.get('token')
-#         if not token:
-#             return Response({'error': 'Token is required'}, status=status.HTTP_400_BAD_REQUEST)
-#         try:
-#             user = User.objects.get(profile__email_confirmation_token=token)
-#             user.profile.email_confirmed = True
-#             user.profile.email_confirmation_token = ''
-#             user.profile.save()
-#             return Response({'message': 'Email confirmed successfully'}, status=status.HTTP_200_OK)
-#         except ObjectDoesNotExist:
-#             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+class ConfirmEmailApiView(APIView):
+    def get(self, request, *args, **kwargs):
+        token = request.query_params.get('token')
+        if not token:
+            return Response({'error': 'Token is required'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user = CustomUser.objects.get(verification_token=token)
+            user.email_verified = True
+            user.verification_token = ''
+            user.profile.save()
+            return Response({'message': 'Email confirmed successfully'}, status=status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
 class UniqueUserNameApiView(APIView):
     def get(self, request):
@@ -88,8 +96,9 @@ class UniqueUserNameApiView(APIView):
             return Response({'ok':False,'message':'no username'}, status=status.HTTP_400_BAD_REQUEST)
         if CustomUser.objects.filter(username=username).exists():
             return Response({'ok':False,'message':'name exist'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'ok':True,'name':'available'}, status=status.HTTP_200_OK)
+        if WebUsers.objects.filter(web_username=username).exists():
+            return Response({'ok':False,'message':'name exist'}, status=status.HTTP_200_OK)
+        return Response({'ok':True,'name':'available'}, status=status.HTTP_200_OK)
 
 
 class AllertsView(View):

@@ -1,4 +1,31 @@
 {% extends 'components/lk-base.html' %}
+{% block title %}Профиль пользователя{% endblock %}
 {% block lk_content %}
-    <h2>Ваш Профайл</h2>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+<div class="container">
+
+    <form method="post" class="order-form">
+        {% csrf_token %}
+    <h2 class="mark-main-color">{{user.username}}</h2>
+            {% for field in form %}
+            <div class="row-container">
+                <div class="input-container">
+                    <label for="{{ field.id_for_label }}" class="input_explain">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            </div>
+            {% endfor %}
+        {% if form.errors %}
+        <ul class="error-list">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+        <button type="submit" class="submit-button">Изменить данные</button>
+    </form>
+</div>
 {% endblock %}

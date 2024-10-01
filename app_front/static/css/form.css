@@ -154,3 +154,9 @@
     border: 2px solid red; /* Красная рамка */
     background-color: #f8d7da; /* Светло-красный фон */
 }
+.error-list {
+    color: red;
+    font-size: 0.875rem;
+    text-align: left;
+    margin-bottom: 6px;
+}

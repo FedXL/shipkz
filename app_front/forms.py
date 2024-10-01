@@ -1,20 +1,18 @@
 from django import forms
 from django.forms import formset_factory
 
-
 class UnregisteredOrderForm(forms.Form):
-    where_to = forms.ChoiceField(
+    country = forms.ChoiceField(
         label='Где покупаем?',
         choices=[
-            ('1', 'США'),
-            ('2', 'Европа'),
-            ('3', 'Англия'),
-            ('4', 'Другое'),
+            ('USA', 'США'),
+            ('EUROPE', 'Европа'),
+            ('ENGLAND', 'Англия'),
+            ('OTHER', 'Другое'),
         ],
         widget=forms.RadioSelect
     )
-
-    goods_link = forms.CharField(
+    url = forms.CharField(
         label='Ссылка на товар:',
         max_length=100,
         required=True,
@@ -69,7 +67,6 @@ class RegisterOrderItemForm(forms.Form):
         required=True,
         widget=forms.TextInput(attrs={'placeholder': 'Например: https://www.amazon.com/'})
     )
-
     count = forms.IntegerField(
         label='Количество товара:',
         required=True,

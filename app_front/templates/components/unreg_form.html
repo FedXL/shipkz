@@ -2,21 +2,21 @@
 <link rel="stylesheet" href="{% static 'css/form.css' %}">
 <form class="order-form" method="post">
     {% csrf_token %}
-    <span class="input_explain">{{form.where_to.label}}</span>
+    <span class="input_explain">{{form.country.label}}</span>
     <div class = "row-container">
         <div class="form-country">
-            {% for choice in form.where_to %}
+            {% for choice in form.country %}
                 <label class="radio-img" for="radio-{{ choice.data.value }}">
-                    <input type="radio" id="radio-{{ choice.data.value }}"  name="where_to" value="{{ choice.data.value }}" style="display:none;">
-                    <img src="{% static '/images/flags' %}/{{ choice.data.value }}.jpg?v={{version}}" title="{{ choice.choice_label }}">
+                    <input type="radio" id="radio-{{ choice.data.value }}"  name="country" value="{{ choice.data.value }}" style="display:none;">
+                    <img src="{% static '/images/flags' %}/{{forloop.counter}}.jpg?v={{version}}" title="{{ choice.choice_label }}">
                 </label>
             {% endfor %}
         </div>
     </div>
     <div class="row-container">
         <div class="input-container">
-            <span class = "input_explain">{{form.goods_link.label}}</span>
-            {{form.goods_link}}
+            <span class = "input_explain">{{form.url.label}}</span>
+            {{form.url}}
         </div>
     </div>
     <div class="row-container">
@@ -45,5 +45,15 @@
             {{form.phone}}
         </div>
     </div>
+    {% if form.errors %}
+    <ul class="error-list">
+        {% for field, errors in form.errors.items %}
+
+            {% for error in errors %}
+                <li>{{field}}{{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+{% endif %}
     <button class="submit-button" type="submit">Заказать</button>
 </form>

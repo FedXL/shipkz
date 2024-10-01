@@ -4,7 +4,9 @@ from dotenv import load_dotenv
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_URL = "127.0.0.1:80"
+BASE_URL_HOST = f"https://mb.artcracker.io/testg_api/point"
 SECRET_KEY = os.getenv('SECRET_KEY')
+SESSION_COOKIE_SECURE = False
 DEBUG = True
 ALLOWED_HOSTS = ['localhost','127.0.0.1']
 AUTH_USER_MODEL = 'app_auth.CustomUser'
@@ -24,6 +26,10 @@ INSTALLED_APPS = [
     'channels',
     'rest_framework',
 ]
+
+MIGRATION_MODULES = {
+    'legacy': None,
+}
 
 SITE_ID = 1
 MIDDLEWARE = [
@@ -77,6 +83,7 @@ DATABASES = {
 #     }
 # }
 # DATABASE_ROUTERS = ['shipkz.db_router.DatabaseRouter']
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -123,3 +130,13 @@ MEDIA_ROOT = '/var/www/media'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
+
+
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+
