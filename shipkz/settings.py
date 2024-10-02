@@ -41,8 +41,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'app_front.middleware.UnregisterAuthMiddleware',
 ]
-
 
 INTERNAL_IPS = ['127.0.0.1']
 ROOT_URLCONF = 'shipkz.urls'
@@ -130,8 +130,8 @@ MEDIA_ROOT = '/var/www/media'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
-
-
+SHARABLE_SECRET_LONG = os.getenv('SHARABLE_SECRET_LONG')
+SHARABLE_SECRET = os.getenv('SHARABLE_SECRET')
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']

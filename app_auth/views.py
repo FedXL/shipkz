@@ -74,7 +74,6 @@ class ConfirmEmailMessageView(LoginRequiredMixin, View):
                           context={'user_email': user.email})
 
 
-
 class ConfirmEmailApiView(APIView):
     def get(self, request, *args, **kwargs):
         token = request.query_params.get('token')
@@ -89,6 +88,7 @@ class ConfirmEmailApiView(APIView):
         except ObjectDoesNotExist:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class UniqueUserNameApiView(APIView):
     def get(self, request):
         username = request.query_params.get('username')
@@ -99,6 +99,7 @@ class UniqueUserNameApiView(APIView):
         if WebUsers.objects.filter(web_username=username).exists():
             return Response({'ok':False,'message':'name exist'}, status=status.HTTP_200_OK)
         return Response({'ok':True,'name':'available'}, status=status.HTTP_200_OK)
+
 
 
 class AllertsView(View):

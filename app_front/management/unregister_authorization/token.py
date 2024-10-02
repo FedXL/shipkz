@@ -1,22 +1,24 @@
 import datetime
 import os
-
 import jwt
+from django.conf import settings
 from dotenv import load_dotenv
 from jwt import ExpiredSignatureError, ImmatureSignatureError
-
 load_dotenv()
-sharable_secret = os.getenv('SHARABLE_SECRET')
+
+sharable_secret=settings.SHARABLE_SECRET
 
 def create_token(username: str,
                  ip: str,
+                    user_id: str,
                  secret: str = sharable_secret,
-                 timedelta: datetime.timedelta = datetime.timedelta(days=14)):
+                 timedelta: datetime.timedelta = datetime.timedelta(days=14),
+                 ):
     """long token"""
     current_time = datetime.datetime.now()
     expiried_time = current_time + timedelta
     token = jwt.encode({'username': username,
-                        'user_id': 0,
+                        'user_id': user_id,
                         'ip': ip,
                         'iat': current_time,
                         'exp': expiried_time},
@@ -39,6 +41,7 @@ def create_access_token(username: str, secret=sharable_secret, user_id=0):
     return token
 
 def check_token(token: str, secret=sharable_secret, is_comment=False) -> tuple[dict | None, str] | None | dict:
+    """return decoded token dict  if is_comment=False, else return tuple(decoded_token, comment)"""
     comment, decoded_token = None, None
     try:
         decoded_token = jwt.decode(token, secret, algorithms=["HS256"], verify=True)

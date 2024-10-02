@@ -11,8 +11,7 @@ from app_auth.mixins import EmailVerificationRequiredMixin
 from app_auth.models import Profile
 from app_front.forms import UnregisteredOrderForm, OrderForm, RegisterOrderItemForm, RegisterOrderItemFormSet
 from app_front.management.orders.ai_try import my_logger
-from app_front.management.unregister_authorization.token import check_token
-from app_front.management.unregister_authorization.unregister_web_users import get_unregister_web_user
+from app_front.management.unregister_authorization.token import check_token, create_token
 from app_front.management.utils import get_user_ip
 from app_front.utils import generate_jwt_token
 from legacy.models import Exchange, WebUsers, Orders
@@ -99,20 +98,15 @@ class BaseOrderView(View):
             form_data = form.cleaned_data
             if pointer == 'unregistered':
                 my_logger.info(request.session)
-                shipkz_authorization = request.COOKIES.get('ShipKZAuthorization',None)
-                if shipkz_authorization:
-                    decoder_token = check_token(shipkz_authorization)
-                    username = decoder_token.get('username')
-                username = "UNREG_" + str(session_number)
-                web_user, create = WebUsers.objects.get_or_create(web_username=username)
+                token = request.COOKIES.get('ShipKZAuthorization', None)
+                token = check_token(token)
+                
                 order = Orders.objects.create(
                     type='WEB_ORDER',
                     body=form_data,
                     user_ip=user_ip,
                     web_user=web_user
                 )
-
-
             return render(request,template_name='pages/success.html',context={"pointer":pointer,"result":"success","data":data})
         else:
             return render(request,template_name=self.template_name,context={'form': form, 'formset': formset, 'pointer': pointer})
@@ -137,10 +131,6 @@ class AboutUsPageView(View):
 class ContactsPageView(View):
     def get(self, request):
         return render(request, 'pages/contacts.html')
-
-
-
-
 
 
 class LkHelloPageView(ActiveUserConfirmMixin,
