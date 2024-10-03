@@ -41,7 +41,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'app_front.middleware.UnregisterAuthMiddleware',
 ]
 
 INTERNAL_IPS = ['127.0.0.1']

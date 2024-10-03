@@ -43,4 +43,8 @@
         </div>
     </div>
 
-<script type="module" src="{% static 'js/mini_messanger.js'%}"></script>
+<script>const apiEndpoint= '{% url "api-unreg-auth" %}';
+</script>
+<script  src="{% static 'js/token_auth.js' %}"> './token_auth.js';</script>
+<script  src="{% static 'js/messanger/mini_messanger.js' %}">
+</script>

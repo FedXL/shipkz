@@ -4,6 +4,7 @@ import time
 def generate_jwt_token(user_id, username):
     # Set the secret key for signing the token (should be long and complex)
     secret_key = 'SuperPuperCriptoSecret!#!@)(*_)%$ADawdawW:'
+
     current_time = int(time.time())
     expiration_time = current_time + 20
     payload = {

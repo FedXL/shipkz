@@ -5,10 +5,10 @@
     {% csrf_token %}
 
     <div class="form-country">
-        {% for choice in form.where_to %}
+        {% for choice in form.country %}
             <label class="radio-img" for="radio-{{ choice.data.value }}">
-                <input type="radio" id="radio-{{ choice.data.value }}" name="where_to" value="{{ choice.data.value }}" style="display:none;" required>
-                <img src="{% static '/images/flags' %}/{{ choice.data.value }}.jpg?v={{version}}" title="{{ choice.choice_label }}">
+                <input type="radio" id="radio-{{ choice.data.value }}" name="country" value="{{ choice.data.value }}" style="display:none;" required>
+                <img src="{% static '/images/flags' %}/{{forloop.counter}}.jpg?v={{version}}" title="{{ choice.choice_label }}">
             </label>
         {% endfor %}
     </div>

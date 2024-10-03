@@ -4,7 +4,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views import View
-
 from app_auth.forms import ProfileModelForm
 from app_auth.mixins import ActiveUserConfirmMixin
 from app_auth.mixins import EmailVerificationRequiredMixin
@@ -100,14 +99,31 @@ class BaseOrderView(View):
                 my_logger.info(request.session)
                 token = request.COOKIES.get('ShipKZAuthorization', None)
                 token = check_token(token)
-                
+                web_username = token.get('username')
+                web_user = WebUsers.objects.filter(web_username=web_username).first()
                 order = Orders.objects.create(
                     type='WEB_ORDER',
                     body=form_data,
                     user_ip=user_ip,
                     web_user=web_user
                 )
-            return render(request,template_name='pages/success.html',context={"pointer":pointer,"result":"success","data":data})
+                return render(request,template_name='pages/success.html',context={"pointer":pointer,"result":"success","data":data})
+            elif pointer =='registered':
+                form_set_data = formset.cleaned_data
+                form_data = form.cleaned_data
+                data = {"form":form_data, 'form_set': form_set_data}
+
+
+                web_user = WebUsers.objects.filter(web_username=customer.username).first()
+                # order = Orders.objects.create(
+                #     type='WEB_ORDER',
+                #     body=form_data,
+                #     user_ip=user_ip,
+                #     web_user=web_user
+                # )
+                return render(request,template_name='pages/success.html',context={"pointer":pointer,"result":"success","data":data})
+
+
         else:
             return render(request,template_name=self.template_name,context={'form': form, 'formset': formset, 'pointer': pointer})
 
@@ -197,7 +213,12 @@ class LkProfilePageView(View):
 
 class LkMessagesPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixin, View):
     def get(self, request):
-        token=generate_jwt_token(1, 'admin')
+        user = request.user
+        profile = get_object_or_404(Profile, user=user)
+        web_user = WebUsers.objects.filter(web_username=user.username).first()
+        username = web_user.web_username
+        user_id = web_user.user_id
+        token=generate_jwt_token(user_id, username)
         return render(request,
                       template_name='lk-pages/lk-messages-page.html',
                       context={'token': token})

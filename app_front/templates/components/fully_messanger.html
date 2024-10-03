@@ -1,17 +1,17 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/fully_messanger.css' %}">
+
 <div class="messageWindowFrame">
             <div class = 'returnContainer'>
                 <div class="returnText">Мы всегда на связи</div>
                 <div class="simaFor" id="simaFor"></div>
             </div>
             <div class = "messageWindow" id="messageWindow"></div>
-            <div class = "inputContainer">
+                <div class = "inputContainer">
                     <textarea oninput="autoExpand(this)" class="myTextArea" id="inputText"></textarea>
                 <div class = "buttonsContainer">
                     <input type="file" id="fileInput" style="display: none;"  accept="image/*, .pdf, .txt, .docx, .xlsx">
                     <button id="buttonAddFile" class = "buttonAddFileContainer" title='Прикрепить файл'>
-
                     <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M13.5 3H12H8C6.34315 3 5 4.34315 5 6V18C5 19.6569 6.34315 21 8 21H11M13.5 3L19 8.625M13.5 3V7.625C13.5 8.17728 13.9477 8.625 14.5 8.625H19M19 8.625V11.8125" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M17 15V18M17 21V18M17 18H14M17 18H20" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g>
                       </svg>
@@ -26,5 +26,6 @@
         </div>
 <script>
     const exportToken = '{{token}}';
+    const exportUser = '{{user.username}}';
 </script>
 <script src="{% static 'js/messanger/fully_messanger.js' %}"></script>

@@ -1,13 +1,15 @@
 import datetime
-import os
 import jwt
 from django.conf import settings
 from dotenv import load_dotenv
 from jwt import ExpiredSignatureError, ImmatureSignatureError
+from app_front.management.unregister_authorization.unregister_web_users import generate_random_name
+from app_front.management.utils import get_user_ip
+from legacy.models import WebUsers
+
+
 load_dotenv()
-
 sharable_secret=settings.SHARABLE_SECRET
-
 def create_token(username: str,
                  ip: str,
                     user_id: str,
@@ -59,3 +61,45 @@ def check_token(token: str, secret=sharable_secret, is_comment=False) -> tuple[d
             return decoded_token, comment
         else:
             return decoded_token
+
+
+
+
+
+
+
+
+def token_handler(user_ip,token=None):
+    if not token:
+        return handle_no_token(user_ip=user_ip)
+    else:
+        return handle_token(user_ip=user_ip,token=token)
+
+
+def handle_no_token(user_ip):
+    new_username = generate_random_name()
+    new_username = 'UNREG_' + new_username
+    web_user = WebUsers.objects.create(web_username=new_username)
+    new_token = create_token(username=new_username,
+                             user_id=web_user.user_id,
+                             ip=user_ip)
+    return new_token
+
+
+def handle_token(user_ip, token):
+    decoded_token = check_token(token)
+    if decoded_token:
+        return token
+    else:
+        return handle_no_token(user_ip)
+
+
+class TokenMashine:
+    def __init__(self, user_ip):
+        self.user_ip = user_ip
+
+    def get_token(self, token):
+        return token_handler(user_ip=self.user_ip, token=token)
+
+
+

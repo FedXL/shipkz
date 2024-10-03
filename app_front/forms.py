@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import formset_factory
 
-class UnregisteredOrderForm(forms.Form):
+
+class OrderForm(forms.Form):
     country = forms.ChoiceField(
         label='Где покупаем?',
         choices=[
@@ -12,6 +13,11 @@ class UnregisteredOrderForm(forms.Form):
         ],
         widget=forms.RadioSelect
     )
+
+
+
+
+class UnregisteredOrderForm(OrderForm):
     url = forms.CharField(
         label='Ссылка на товар:',
         max_length=100,
@@ -46,19 +52,6 @@ class UnregisteredOrderForm(forms.Form):
         required=True,
         widget=forms.TextInput(attrs={'placeholder': 'Введите ваш телефон'})
     )
-
-class OrderForm(forms.Form):
-    where_to = forms.ChoiceField(
-        label='Где покупаем?',
-        choices=[
-            ('1', 'США'),
-            ('2', 'Европа'),
-            ('3', 'Англия'),
-            ('4', 'Другое'),
-        ],
-        widget=forms.RadioSelect
-    )
-
 
 class RegisterOrderItemForm(forms.Form):
     goods_link = forms.CharField(

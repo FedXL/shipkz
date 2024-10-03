@@ -1,5 +1,4 @@
-
-        .documentButton {
+    .documentButton {
           background-color: #ccc;
           color: white;
           padding: 10px 10px;
@@ -7,6 +6,7 @@
           transition: background-color 0.3s ease;
           text-align: center; /* Выравниваем текст по центру */
         }
+
         .simaFor {
             height: 15px;
             width: 15px;
@@ -14,23 +14,16 @@
             margin: 5px;
             border: 1px solid black;
         }
+
         .simaGreen {
             background-color: lightgreen;
         }
+
         .simaRed {
             background-color: red;
         }
         .documentButton:hover {
           background-color: #fec502;
-        }
-        .messageWindowFrame {
-            min-height: 400px;
-            max-height: 500px;
-            border: 2px solid #fec502;
-            background: white;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
         }
         .returnContainer{
             display: flex;
@@ -53,15 +46,30 @@
             font-size: 18px;
             font-weight: bold;
         }
+
+        .messageWindowFrame {
+            margin-top: 15px;
+            min-width: 350px;
+            max-width: 600px;
+            min-height: 400px;
+            max-height: 550px;
+            background: white;
+            border-radius: 10px; /* Поменял порядок свойств */
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.3);
+        }
+
         .messageWindow {
-            overflow-x: hidden; /* Prevent horizontal overflow */
-            overflow-y: scroll;
+            overflow: auto;
             flex: 1;
             min-height: 50%;
             border-radius: 10px;
             overflow-y: scroll;
+            overflow-x: hidden;
             scrollbar-width: thin;
             scrollbar-color: darkgray lightgray;
+
             &::-webkit-scrollbar {
                 width: 2px;
             }
@@ -73,6 +81,7 @@
                 background-color: lightgray;
             }
         }
+
         .inputContainer {
             flex-basis: 5%;
             max-height: 50%;
@@ -83,6 +92,7 @@
             border-bottom-left-radius: 10px; /* Скругление левого нижнего угла */
             border-bottom-right-radius: 10px; /* Скругление правого нижнего угла */
         }
+
         .myTextArea {
             width: 100%;
             border-radius: 10px ;
@@ -105,6 +115,7 @@
         .myTextArea {
             scrollbar-width: none ;
         }
+
         .myTextArea:focus {
             outline: none ;
 
@@ -138,10 +149,10 @@
             background: transparent;
             padding: 0;
             margin-left: 5px;
-            margin-right: 5px ;
+            margin-right: 5px;
             cursor: pointer;
             border: none;
-            border-radius: 10px ;
+            border-radius: 10px;
 
         }
 
@@ -171,7 +182,7 @@
             margin-right: 5px;
             cursor: pointer;
             border: none;
-            border-radius: 10px ;
+            border-radius: 10px;
         }
         .oneMessageContainer{
             display: flex;
@@ -210,17 +221,8 @@
         .spacer{
             flex: 1;
         }
-
-        .historyPhoto .oneMessageText {
-          display: flex;
-            flex-direction: column;
-          padding: 15px;
-            max-height: 300px;
-            max-width: 300px;
+        .oneMessageText img{
+            display: flex;
+        max-height: 400px;
+        max-width: 400px;
         }
-        .historyPhoto .oneMessageText img {
-          display: flex;
-          flex-grow: 1;
-
-        }
-

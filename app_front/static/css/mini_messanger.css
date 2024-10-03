@@ -157,6 +157,7 @@
     border: none;
     border-radius: 10px !important;
 }
+
 .buttonAddFileContainerInactive{
     width: 30px;
     height: 30px;
@@ -248,4 +249,4 @@
     }
     100% {
         background-color: #eabb23;
-    }
+    }}

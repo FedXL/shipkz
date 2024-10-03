@@ -1,6 +1,6 @@
 
-
 console.log('START FULLY MESSANGER');
+const new_user = exportUser;
 
 function autoExpand(element) {
         element.style.height = 'auto';
@@ -187,8 +187,6 @@ function downloadFile(file, fileName) {
     URL.revokeObjectURL(url);
 }
 
-
-
 const sendAskForFile = (target, path, ws) => {
 console.log(`ASK for file ${target}`);
     let data = {
@@ -356,6 +354,7 @@ const initWssConnection = (token, url) => {
                     console.warn(`UNSUCCESSFUL ${incomeData}`);
                 }
                 break;
+
             case 'download_history':
                 let messages = incomeData.data;
                 console.log(messages);
@@ -464,7 +463,7 @@ function toggleFullScreenImage(event) {
 
 const accessToken = exportToken;
 const socketUrl =   "wss://supportstation.kz/ws/";
-const new_user =  "admin";
+
 console.log('accessToken', accessToken);
 const ws = initWssConnection(accessToken, socketUrl);
 console.log("ADD LISTENER TO CONSTRACTION...............1 inputText");

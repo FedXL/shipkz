@@ -1,7 +1,10 @@
+import logging
+
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import  AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.middleware.csrf import CsrfViewMiddleware
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views import View
@@ -12,6 +15,8 @@ from rest_framework.views import APIView
 from django.core.exceptions import ObjectDoesNotExist
 from app_auth.forms import RegistrationForm
 from app_auth.models import CustomUser, Profile
+from app_auth.serializers import UnregRegistrationSerializer
+from app_front.management.unregister_authorization.token import handle_token, token_handler
 from legacy.models import WebUsers
 from app_auth.tasks import  send_verification_email_task
 
@@ -106,3 +111,28 @@ class AllertsView(View):
     def get(self, request):
         logout(request)
         return HttpResponseRedirect(reverse('home'))
+
+
+logger = logging.getLogger(__name__)
+
+
+class UnregRegistrationApiView(APIView):
+    serializer = UnregRegistrationSerializer
+
+    def post(self, request):
+        csrf_middleware = CsrfViewMiddleware(lambda req: None)
+        try:
+            csrf_middleware.process_view(request, None, None, None)
+        except Exception:
+            return Response({'error': 'CSRF token invalid or missing'}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = self.serializer(data=request.data)
+        if serializer.is_valid():
+            token = serializer.data.get('token')
+            ip = serializer.data.get('ip')
+            token = token_handler(user_ip=ip, token=token)
+            return Response({'token': token}, status=status.HTTP_200_OK)
+
+        # Log the errors for debugging
+        logger.error(f"Serializer errors: {serializer.errors}")
+        return Response({'error': 'Invalid data','messages':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
