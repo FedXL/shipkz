@@ -9,7 +9,6 @@ from app_auth.mixins import ActiveUserConfirmMixin
 from app_auth.mixins import EmailVerificationRequiredMixin
 from app_auth.models import Profile
 from app_front.forms import UnregisteredOrderForm, OrderForm, RegisterOrderItemForm, RegisterOrderItemFormSet
-from app_front.management.orders.ai_try import my_logger
 from app_front.management.unregister_authorization.token import check_token, create_token
 from app_front.management.utils import get_user_ip
 from app_front.utils import generate_jwt_token
@@ -17,26 +16,7 @@ from legacy.models import Exchange, WebUsers, Orders
 from legacy.serializers import OrdersSerializer
 
 class TariffsPageView(View):
-    """
-    {
-        "sber_usd": {
-            "price": 99.89,
-            "data": "Актуально на 21:00 по Москве, 26 сентября 2024 г."
-        },
-        "sber_euro": {
-            "price": 112.98,
-            "data": "Актуально на 21:00 по Москве, 26 сентября 2024 г."
-        },
-        "usd": {
-            "price": 92.388,
-            "data": "на 26.09.2024"
-        },
-        "eur": {
-            "price": 103.4758,
-            "data": "на 26.09.2024"
-        }
-    }
-    """
+
     def get(self, request):
         eur_obj = Exchange.objects.get(valuta='eur')
         usd_obj = Exchange.objects.get(valuta='usd')
@@ -61,8 +41,6 @@ class TariffsPageView(View):
                                             }
         json_rates = json.dumps(exchange_rates)
         data = {'exchange_rate': json_rates}
-
-
         return render(request,
                       template_name='pages/tariffs.html',
                       context={'data': data})
@@ -96,7 +74,6 @@ class BaseOrderView(View):
             user_ip = get_user_ip(request)
             form_data = form.cleaned_data
             if pointer == 'unregistered':
-                my_logger.info(request.session)
                 token = request.COOKIES.get('ShipKZAuthorization', None)
                 token = check_token(token)
                 web_username = token.get('username')
@@ -111,16 +88,14 @@ class BaseOrderView(View):
             elif pointer =='registered':
                 form_set_data = formset.cleaned_data
                 form_data = form.cleaned_data
-                data = {"form":form_data, 'form_set': form_set_data}
-
-
+                data = {"country":form_data, 'items': form_set_data}
                 web_user = WebUsers.objects.filter(web_username=customer.username).first()
-                # order = Orders.objects.create(
-                #     type='WEB_ORDER',
-                #     body=form_data,
-                #     user_ip=user_ip,
-                #     web_user=web_user
-                # )
+                order = Orders.objects.create(
+                    type='WEB_ORDER',
+                    body=data,
+                    user_ip=user_ip,
+                    web_user=web_user
+                )
                 return render(request,template_name='pages/success.html',context={"pointer":pointer,"result":"success","data":data})
 
 
@@ -184,8 +159,16 @@ class LkOrdersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, V
         data=get_orders_by_username(request.user.username)
         return render(request, 'lk-pages/lk-orders-page.html',context={'data':data})
 
+
+def get_pre_orders_by_username(username):
+    web_user = WebUsers.objects.filter(web_username=username).first()
+    orders = Orders.objects.filter(web_user=web_user,status=None).order_by('-id')
+    pass
+
+
 class LkPreordersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
     def get(self, request):
+        data=get_pre_orders_by_username(request.user.username)
         return render(request, 'lk-pages/lk-pre-orders-page.html')
 
 
@@ -279,6 +262,10 @@ def get_orders_by_username(username):
     serializer = OrdersSerializer(orders, many=True)
     serialized_data = serializer.data
     return serialized_data
+
+
+
+
 
 
 

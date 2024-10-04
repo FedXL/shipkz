@@ -40,9 +40,7 @@ services:
     depends_on:
       - web
   redis:
-    image: redis:latest
-    ports:
-      - "6379:6379"  # Открываем порт Redis
+    image: redis:latest # Открываем порт Redis
     expose:
       - "6379"
   celery:

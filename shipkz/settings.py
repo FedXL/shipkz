@@ -3,12 +3,15 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
-BASE_URL = "127.0.0.1:80"
-BASE_URL_HOST = f"https://mb.artcracker.io/testg_api/point"
+BASE_URL = "https://supportstation.kz"
+BASE_URL_HOST = f"https://supportstation.kz"
 SECRET_KEY = os.getenv('SECRET_KEY')
 SESSION_COOKIE_SECURE = False
 DEBUG = True
-ALLOWED_HOSTS = ['localhost','127.0.0.1']
+
+
+
+ALLOWED_HOSTS = ['localhost','127.0.0.1','supportstation.kz']
 AUTH_USER_MODEL = 'app_auth.CustomUser'
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -74,14 +77,7 @@ DATABASES = {
         'PORT': os.getenv('POSTGRES_PORT'),
     }
 }
-#
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-# DATABASE_ROUTERS = ['shipkz.db_router.DatabaseRouter']
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -115,13 +111,27 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
+
+
+
+
+
+
 LANGUAGE_CODE = 'ru'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-STATIC_URL = 'static/'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-MEDIA_URL = 'media/'
+
+# FORCE_SCRIPT_NAME = '/shipkz'
+# APPEND_SLASH = True
+# MEDIA_URL = '/shipkz/media/'
+# STATIC_URL = '/shipkz/static/'
+MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
+
+
 
 STATIC_ROOT = '/var/www/static'
 MEDIA_ROOT = '/var/www/media'

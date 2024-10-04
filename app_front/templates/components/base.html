@@ -155,6 +155,9 @@ body {
                 {% endif %}
             </div>
         </nav>
+        <div class="image-container">
+        <img src="{% static 'images/main_image.webp' %}" alt="ShipKZ" class="logo">
+        </div>
    </header>
     <main>
         {% block content %} {% endblock %}
@@ -163,5 +166,6 @@ body {
         <p>&copy; 2024 ShipKZ. All rights reserved.</p>
     </footer>
 <script src="{% static 'js/header.js' %}"></script>
+
 </body>
 </html>

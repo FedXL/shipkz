@@ -2,17 +2,29 @@ html {
     font-size: 16px;
 }
 
-body {
-    display: grid;
-    grid-template-rows: auto 1fr auto; /* header, main, footer */
-    grid-template-columns: 1fr; /* Только один столбец */
-    min-height: 100vh; /* Убедитесь, что тело страницы занимает всю высоту экрана */
-}
+
 
 header {
     grid-row: 1 / 2;
     background-color: var(--main-color);
     width: 100%;
+    overflow: hidden; /* Чтобы избежать прокрутки хедера */
+}
+
+.image-container {
+    height: 300px; /* Фиксированная высота контейнера */
+    overflow: hidden; /* Скрывает часть картинки, выходящую за пределы контейнера */
+    position: relative;
+}
+
+.image-container img {
+    width: 100%; /* Задает ширину картинки 100% от ширины контейнера */
+    height: auto; /* Сохраняет пропорции картинки */
+    position: absolute; /* Позволяет позиционировать картинку */
+    top: 50%; /* Центрирует картинку по вертикали */
+    left: 50%; /* Центрирует картинку по горизонтали */
+    transform: translate(-50%, -50%); /* Центрирует картинку в контейнере */
+    transition: transform 0.1s; /* Плавный переход для эффекта */
 }
 
 .short-menu,
