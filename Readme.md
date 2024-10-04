@@ -1,5 +1,5 @@
 ### Unregistered User Authorization Model Description
 
-The `app_middlewares` implements this mechanism by checking each request for the presence of a token in the header. If the token is not present, the user is registered.
-
-Looks we can have some problems with spammers and indexing bots. We need to implement a mechanism that will allow us to distinguish between registered and unregistered users.
+- Токены доступа выдаются при каждом взаимодействии с сервером незарегистрированного пользователя. 
+например при добавлении заказа. Или по нажатию на кнопку минимессанджера. Срок жизни токена 2 недели. Каждый токен создает ного WebUsers пользователя без профиля и доступа на сайт.
+- Разделы app_auth static js код который добавляет авторизацию в базовый шаблон.
