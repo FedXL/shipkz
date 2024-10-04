@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{context.user.user_name}}</title>
+	<style>
+		table {
+  border-collapse: collapse; /* Объединение границ ячеек */
+  width: 100%; /* Ширина таблицы */
+}
+
+table td, table th {
+  border: 1px solid #000; /* Толщина и цвет границ ячеек */
+  padding: 8px; /* Отступы внутри ячеек */
+}
+
+</style>
+</head>
+<body>
+<h2>{{context.user.user_id}} | {{context.user.user_name}} | {{context.user.user_second_name}} | {{context.user.tele_username}} </h2>
+<br>
+<table style="boa">
+<thead>
+	<tr>
+		<td>Order</td>
+		<td>Time</td>
+		<td>Parcing result(money)</td>
+		<td>Manager</td>
+		<td>Type</td>
+</thead>
+<tbody>
+{%for order in context.orders%}
+<tr>
+ <td><a href="/order/{{order.Order.id}}">{{order.Order.id}}</td>
+ <td>{{order.Order.time}}</td>
+ <td>{{order.OrderStatus.order_price}}</td>
+ <td><a href='/manager/id/{{order.OrderStatus.manager_id}}'>{{order.OrderStatus.manager_id}}</a></td>
+ <td>{{order.Order.type}}</td>
+</tr>
+{%endfor%}
+</tbody>
+</table>
+
+
+</body>
+</html>

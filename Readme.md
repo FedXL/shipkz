@@ -1,5 +1,4 @@
 ### Unregistered User Authorization Model Description
 
-- Токены доступа выдаются при каждом взаимодействии с сервером незарегистрированного пользователя. 
-например при добавлении заказа. Или по нажатию на кнопку минимессанджера. Срок жизни токена 2 недели. Каждый токен создает ного WebUsers пользователя без профиля и доступа на сайт.
-- Разделы app_auth static js код который добавляет авторизацию в базовый шаблон.
+- Access tokens are issued for each interaction with the server by an unregistered user. For example, when adding an order or clicking the mini-messenger button. The token's lifespan is 2 weeks. Each token creates a new WebUsers user without a profile and access to the site.
+- The app_auth section contains static JavaScript code that adds authorization to the base template.

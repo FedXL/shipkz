@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WebChat</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+    <style>
+        .chat {
+            height: 300px;
+            width: 400px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            flex: auto;
+            /*display: flex;*/
+            /*flex-direction: column;*/
+            /*align-items: center;*/
+            /*justify-content: center;*/
+            /*padding: 20px;*/
+            background-color: #f0f0f0;
+            /*border: 1px solid #ddd;*/
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+
+
+        .message-input {
+
+            width: 80%;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+
+        .send-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .send-button:hover {
+            background-color: #0056b3;
+        }
+
+
+        .attachment-button {
+            padding: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            outline: none;
+        }
+
+        .attachment-button:hover {
+            color: #007bff;
+        }
+
+
+        .messageContainer {
+            display: flex;
+            padding: 5px;
+        }
+
+
+        .messageQuestion {
+
+            border: 2px solid #8660e5;
+            border-radius: 10px;
+            background-color: lightblue;
+            padding: 10px;
+            overflow-wrap: break-word;
+            max-width:65%;
+            margin-bottom:5px;
+
+        }
+
+        .messageAnswer {
+
+            border: 2px solid darkorange;
+            border-radius: 10px;
+            background-color: #FFE0B2;
+            padding: 10px;
+            overflow-wrap: break-word;
+            max-width:60%;
+            margin-bottom: 5px;
+            margin-right: 25px;
+        }
+        .spacer {
+            flex: 1;
+            min-width: 30%;
+        }
+        .image {
+            cursor: pointer;
+            transition: transform 0.3s;
+            border-radius: 10px;
+        }
+        .chat-container{
+            border: 1px solid black;
+
+            max-width: 400px;
+            max-height: 400px;
+        }
+        .input-container {
+            flex: auto;
+
+
+            width: 400px; /* Ширина контейнера, можете настроить по вашему усмотрению */
+            /*border: 1px solid #000; !* Добавление рамки вокруг контейнера *!*/
+            /* Отступ внутри контейнера, можно настроить по вашему усмотрению */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень для контейнера */
+        }
+
+        .custom-textarea {
+            width: 300px;
+            min-height: 24px; /* Начальная высота */
+            max-height: 200px; /* Максимальная высота */
+            overflow-y: hidden;
+            outline: none;
+            white-space: pre-wrap;
+            border: none;
+            resize: none;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+<h1>Ship KZ Chat</h1>
+<input type="file" id="imageInput" accept="image/*" style="display: none">
+<div id="landing" style="display: none">
+    <input type="text" id="username" placeholder="Username">
+    <button id="join-btn">JOIN</button>
+</div>
+
+<div class = "chat-container">
+
+    <div id="messages" class="chat" style='display: none;'></div>
+    <div  class="input-container">
+        <textarea id="messageInput" class="custom-textarea" rows="1" placeholder="Введите сообщение"></textarea>
+        <button onclick="sendMessage()">send</button>
+
+        <button id="uploadButton">📎</button>
+    </div>
+</div>
+</body>
+</html>

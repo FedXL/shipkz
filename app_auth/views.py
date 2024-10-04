@@ -33,7 +33,7 @@ class LoginView(FormView):
 
 class SignUpView(View):
     form_class = RegistrationForm
-    success_url = reverse_lazy('confirm_email')
+    success_url = reverse_lazy('confirm_email_message')
     template_name = 'registration/signup.html'
 
     def get(self, request):

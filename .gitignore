@@ -4,7 +4,12 @@
 *.pyd
 __pycache__/
 *.env
-*.venv
+.venv
+/legacy/legacy_codebase/chrome/
+/legacy/legacy_codebase/chrome-win32/
+/legacy/legacy_codebase/chromedriver/**
+/legacy/legacy_codebase/chromedriver-win32/
+/legacy/legacy_codebase/chromedriver-linux64/
 env/
 venv/
 ENV/
@@ -20,7 +25,7 @@ coverage.xml
 celerybeat-schedule
 instance/
 .webassets-cache
-legacy/legacy_codebase/**
+
 .idea/
 .vscode/
 *.swp

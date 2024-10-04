@@ -24,7 +24,7 @@ header {
     top: 50%; /* Центрирует картинку по вертикали */
     left: 50%; /* Центрирует картинку по горизонтали */
     transform: translate(-50%, -50%); /* Центрирует картинку в контейнере */
-    transition: transform 0.1s; /* Плавный переход для эффекта */
+    transition: transform 0.2s; /* Плавный переход для эффекта */
 }
 
 .short-menu,
@@ -44,6 +44,9 @@ header {
     .short-menu {
         display: flex;
     }
+    .image-container img {
+    display: none;
+    }
 }
 @media (min-width: 426px) {
     .long-menu {
@@ -52,6 +55,10 @@ header {
     }
     .short-menu {
         display: none;
+    }
+    .image-container
+    {
+        display: block;
     }
 }
 

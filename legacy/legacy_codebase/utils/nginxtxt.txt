@@ -1,0 +1,39 @@
+server {
+    server_name supportstation.kz www.supportstation.kz;
+    listen 443 ssl; # Управляется Certbot
+    ssl_certificate /etc/letsencrypt/live/supportstation.kz/fullchain.pem; # Управляется Certbot
+    ssl_certificate_key /etc/letsencrypt/live/supportstation.kz/privkey.pem; # Управляется Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # Управляется Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # Управляется Certbot
+
+    # Конфигурация для первого приложения на порту 5055
+    location / {
+        proxy_pass http://127.0.0.1:5055;  # Первое приложение на порту 5055
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 1200s;
+    }
+
+    # Конфигурация для второго приложения на порту 8080
+    location /old_connector {
+        proxy_pass http://127.0.0.1:6969;
+         proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+   }
+    # Конфигурация для третьего приложения на порту 9090
+    location /new_connector {
+        proxy_pass http://127.0.0.1:9090;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+sudo service postgresql stop

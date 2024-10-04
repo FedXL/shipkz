@@ -9,7 +9,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 SESSION_COOKIE_SECURE = False
 DEBUG = True
 
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://supportstation.kz',
+]
 
 ALLOWED_HOSTS = ['localhost','127.0.0.1','supportstation.kz']
 AUTH_USER_MODEL = 'app_auth.CustomUser'
@@ -124,12 +126,12 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# FORCE_SCRIPT_NAME = '/shipkz'
-# APPEND_SLASH = True
-# MEDIA_URL = '/shipkz/media/'
-# STATIC_URL = '/shipkz/static/'
-MEDIA_URL = '/media/'
-STATIC_URL = '/static/'
+FORCE_SCRIPT_NAME = '/shipkz'
+APPEND_SLASH = True
+MEDIA_URL = '/shipkz/media/'
+STATIC_URL = '/shipkz/static/'
+# MEDIA_URL = '/media/'
+# STATIC_URL = '/static/'
 
 
 
