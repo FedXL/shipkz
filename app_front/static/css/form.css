@@ -65,7 +65,13 @@
             color: gray;
             border: 2px solid gray;
             border-radius: 5px;
+            min-width: 200px;
         }
+.input-container textarea {
+    min-width: 0; /* Remove minimum width constraint */
+    resize: none; /* Disable auto-resizing */
+    overflow: auto;
+}
 
 .input-container input:focus,
 .input-container textarea:focus {
@@ -73,6 +79,7 @@
             color: white;
             border: 2px solid var(--main-color);
         }
+
 
 .input-container input:hover,
 .input-container textarea:hover {

@@ -1,30 +1,36 @@
 {% load static %}
 <style>
-    #map-container {
-        position: relative;
-        display: flex;
-        width: 50%;
-        margin-left: auto;
-        margin-right: auto;
-        min-width: 300px;
-        height: 400px;
-    }
+  #map-container {
+    position: relative;
+    display: flex;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 300px;
+    height: 400px;
+}
 
-    #map-image {
-        cursor: pointer;
-    }
-    #map-container iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
+#map-image {
+    display: flex;
+    cursor: pointer;
+    width: 100%;
+}
+
+#map-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+
 </style>
 
-<div id="map-container" >
+<div id="map-container" class="map-container">
     <!-- Статичная картинка -->
-    <img id="map-image" src="{% static 'images/yandex.png' %}" alt="Карта">
+    <img id="map-image" class="map-image" src="{% static 'images/yandex.png' %}" alt="Карта">
 </div>
 
 <script>

@@ -39,7 +39,7 @@ class UnregisteredOrderForm(OrderForm):
         label='Комментарий к заказу:',
         required=False,
         widget=forms.Textarea(attrs={'placeholder': 'Любая информация которая вам покажется важной. Например: размер или цвет',
-                                     'rows': 3})
+                                     'rows': 3,'cols': 25})
     )
     email = forms.EmailField(
         label='Email:',

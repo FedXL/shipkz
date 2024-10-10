@@ -4,7 +4,6 @@ import sys
 
 def main():
     client = docker.from_env()
-
     try:
         print("Starting build process...")
         image, build_logs = client.images.build(path=".", tag="fedxl/storage:shipkz")

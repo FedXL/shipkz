@@ -60,6 +60,7 @@ async def handle_webhook(request):
                                                                                      user=decrypted_token)
                         my_logger.debug(f'create order web result: {web_order_id}')
                         await send_meeting_message_to_bot(user_id=web_user_id, user_name=web_user)
+
                         await send_order_alert_bot(user=decrypted_token.get('username'),
                                                    web_user_id=web_user_id,
                                                    order=web_order_id,

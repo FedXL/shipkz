@@ -36,9 +36,10 @@ MIGRATION_MODULES = {
     'legacy': None,
 }
 
-SITE_ID = 1
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -46,9 +47,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+
 ]
 
-INTERNAL_IPS = ['127.0.0.1']
 ROOT_URLCONF = 'shipkz.urls'
 
 TEMPLATES = [
@@ -113,12 +114,6 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
-
-
-
-
-
-
 LANGUAGE_CODE = 'ru'
 TIME_ZONE = 'UTC'
 USE_I18N = True
@@ -126,17 +121,15 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-FORCE_SCRIPT_NAME = '/shipkz'
-APPEND_SLASH = True
-MEDIA_URL = '/shipkz/media/'
-STATIC_URL = '/shipkz/static/'
+# FORCE_SCRIPT_NAME = '/shipkz'
+# APPEND_SLASH = True
+# MEDIA_URL = '/shipkz/media/'
+# STATIC_URL = '/shipkz/static/'
 # MEDIA_URL = '/media/'
 # STATIC_URL = '/static/'
-
-
-
-STATIC_ROOT = '/var/www/static'
+STATIC_ROOT =  '/var/www/static'
 MEDIA_ROOT = '/var/www/media'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',

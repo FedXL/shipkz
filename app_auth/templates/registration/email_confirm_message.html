@@ -1,0 +1,12 @@
+{% extends 'components/base.html' %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/text_insert.css' %}">
+
+<h2>Активируйте учетную запись</h2>
+
+<p>Для доступа в закрытые разделы сайта необходимо активировать учетную запись. На вашу почту: <strong>{{user_email}}</strong>
+    отправлено письмо со ссылкой для подтверждения. Перейдите по ссылке для активации вашей учетной записи</p>
+<p>Если письмо не пришло, проверьте папку "Спам"</p>
+{% endblock %}

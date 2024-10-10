@@ -4,7 +4,7 @@ from app_auth.models import CustomUser, Profile
 
 @admin.register(CustomUser)
 class AdminCustomUser(admin.ModelAdmin):
-    list_display = ['username', 'email', 'email_verified']
+    list_display = ['username', 'email','verification_token','email_verified']
 
 @admin.register(Profile)
 class AdminProfile(admin.ModelAdmin):

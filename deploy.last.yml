@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  gunicorn:
+    image: fedxl/storage:shipkz
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             gunicorn shipkz.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - static_volume:/var/www/static
+      - media_volume:/var/www/media
+    expose:
+      - "8000"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - shipkz_network
+
+  daphne:
+    image: fedxl/storage:shipkz
+    command: daphne -b 0.0.0.0 -p 8001 shipkz.asgi:application
+    volumes:
+      - static_volume:/var/www/static
+      - media_volume:/var/www/media
+    expose:
+      - "8001"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - shipkz_network
+
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - shipkz_network
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "127.0.0.1:9933:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - static_volume:/var/www/static
+      - media_volume:/var/www/media
+    depends_on:
+      - gunicorn
+      - daphne
+    networks:
+      - shipkz_network
+
+  redis:
+    image: redis:latest
+    expose:
+      - "6379"
+    networks:
+      - shipkz_network
+
+  celery:
+    image: fedxl/storage:shipkz
+    command: celery -A shipkz worker --loglevel=info
+    volumes:
+      - static_volume:/var/www/static
+      - media_volume:/var/www/media
+    depends_on:
+      - redis
+      - gunicorn
+    networks:
+      - shipkz_network
+
+  celery-beat:
+    image: fedxl/storage:shipkz
+    command: celery -A shipkz beat --loglevel=info
+    volumes:
+      - static_volume:/var/www/static
+      - media_volume:/var/www/media
+    depends_on:
+      - redis
+      - gunicorn
+    networks:
+      - shipkz_network
+
+volumes:
+  static_volume:
+  media_volume:
+  postgres_data:
+
+networks:
+  shipkz_network:

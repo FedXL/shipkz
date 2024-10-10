@@ -15,11 +15,12 @@ header {
     height: 300px; /* Фиксированная высота контейнера */
     overflow: hidden; /* Скрывает часть картинки, выходящую за пределы контейнера */
     position: relative;
+
 }
 
 .image-container img {
-    width: 100%; /* Задает ширину картинки 100% от ширины контейнера */
-    height: auto; /* Сохраняет пропорции картинки */
+     /* Задает ширину картинки 100% от ширины контейнера */
+    width: 100%;
     position: absolute; /* Позволяет позиционировать картинку */
     top: 50%; /* Центрирует картинку по вертикали */
     left: 50%; /* Центрирует картинку по горизонтали */
@@ -44,10 +45,10 @@ header {
     .short-menu {
         display: flex;
     }
-    .image-container img {
-    display: none;
-    }
+
 }
+
+
 @media (min-width: 426px) {
     .long-menu {
         display: flex;
@@ -56,10 +57,7 @@ header {
     .short-menu {
         display: none;
     }
-    .image-container
-    {
-        display: block;
-    }
+
 }
 
 .short-menu button{
@@ -86,14 +84,20 @@ header {
 }
 
 main {
-    grid-row: 2 / 3; /* Занимает вторую строку */
+    grid-row: 2 / 3;
     padding: 8px;
-    width: 100%; /* Занимает всю доступную ширину */
-    max-width: 1024px;
+    width: 100%;
+    min-height : 90vh;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+
 }
 
 footer {
-    grid-row: 3 / 4; /* Занимает третью строку */
+    grid-row: 3 / 4;
     background-color: #333;
     color: white;
     text-align: center;

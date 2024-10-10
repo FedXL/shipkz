@@ -1,4 +1,6 @@
 import json
+
+from django.conf import settings
 from django.forms import formset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
@@ -9,10 +11,12 @@ from app_auth.mixins import ActiveUserConfirmMixin
 from app_auth.mixins import EmailVerificationRequiredMixin
 from app_auth.models import Profile
 from app_front.forms import UnregisteredOrderForm, OrderForm, RegisterOrderItemForm, RegisterOrderItemFormSet
-from app_front.management.unregister_authorization.token import check_token, create_token
+from app_front.management.email.email_sender import send_order_notification_email
+from app_front.management.unregister_authorization.token import check_token, create_token, token_handler, \
+    handle_no_token_comeback_version
 from app_front.management.utils import get_user_ip
 from app_front.utils import generate_jwt_token
-from legacy.models import Exchange, WebUsers, Orders
+from legacy.models import Exchange, WebUsers, Orders, WebUsersMeta
 from legacy.serializers import OrdersSerializer
 
 class TariffsPageView(View):
@@ -75,16 +79,45 @@ class BaseOrderView(View):
             form_data = form.cleaned_data
             if pointer == 'unregistered':
                 token = request.COOKIES.get('ShipKZAuthorization', None)
-                token = check_token(token)
-                web_username = token.get('username')
-                web_user = WebUsers.objects.filter(web_username=web_username).first()
+                decoded_token = check_token(token)
+                response = render(request, template_name='pages/success.html',
+                                  context={"pointer": pointer,
+                                           "result": "success",
+                                           "data": data})
+                if decoded_token:
+                    web_username = decoded_token.get('username')
+                    web_user = WebUsers.objects.filter(web_username=web_username).first()
+                else:
+                    token, web_user = handle_no_token_comeback_version(user_ip=user_ip)
+                url = data.get('url')
+                price = data.get('price')
+                count = data.get('count')
+                comment = data.get('comment')
+                email = data.get('email')
+                phone = data.get('phone')
+                user_email, created_email = WebUsersMeta.objects.update_or_create(
+                    web_user=web_user,
+                    field='email',
+                    defaults={'value': email}
+                )
+                user_phone, created_phone = WebUsersMeta.objects.update_or_create(
+                    web_user=web_user,
+                    field='phone',
+                    defaults={'value': phone}
+                )
                 order = Orders.objects.create(
                     type='WEB_ORDER',
                     body=form_data,
                     user_ip=user_ip,
                     web_user=web_user
                 )
-                return render(request,template_name='pages/success.html',context={"pointer":pointer,"result":"success","data":data})
+                send_order_notification_email(to_mail=email,form_data=form_data, order_number=order.id)
+                response.set_cookie('ShipKZAuthorization',
+                                    token,
+                                    max_age=14*24*60*60,
+                                    httponly=False,
+                                    secure=not settings.DEBUG)
+                return response
             elif pointer =='registered':
                 form_set_data = formset.cleaned_data
                 form_data = form.cleaned_data
@@ -97,8 +130,6 @@ class BaseOrderView(View):
                     web_user=web_user
                 )
                 return render(request,template_name='pages/success.html',context={"pointer":pointer,"result":"success","data":data})
-
-
         else:
             return render(request,template_name=self.template_name,context={'form': form, 'formset': formset, 'pointer': pointer})
 

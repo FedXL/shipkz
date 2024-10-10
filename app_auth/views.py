@@ -1,5 +1,6 @@
 import logging
 
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import  AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -31,6 +32,9 @@ class LoginView(FormView):
         login(self.request, user)
         return super().form_valid(form)
 
+def warning_messages_view(request):
+    return render(request, 'registration/auth_messages.html')
+
 class SignUpView(View):
     form_class = RegistrationForm
     success_url = reverse_lazy('confirm_email_message')
@@ -51,7 +55,7 @@ class SignUpView(View):
             user.save()
             web_user = WebUsers.objects.create(web_username=form.cleaned_data['username'],
                                                user_name=form.cleaned_data['username'],)
-            profile = Profile(user=user,email=form.cleaned_data['email'],web_user=web_user)
+            profile = Profile(user=user,email=form.cleaned_data['email'], web_user=web_user)
             profile.save()
             login(request, user)
             send_verification_email_task.delay(to_mail=user.email,
@@ -68,31 +72,32 @@ class LogoutCustomView(View):
 
 
 class ConfirmEmailMessageView(LoginRequiredMixin, View):
-
     def get(self, request):
         user = request.user
         if user.email_verified:
             return HttpResponseForbidden("Your email has not been verified.")
         else:
             return render(request,
-                          template_name='registration/confirm_email.html',
+                          template_name='registration/email_confirm_message.html',
                           context={'user_email': user.email})
 
 
-class ConfirmEmailApiView(APIView):
+class ConfirmEmailPointView(View):
     def get(self, request, *args, **kwargs):
-        token = request.query_params.get('token')
+        token = request.GET.get('token')
         if not token:
-            return Response({'error': 'Token is required'}, status=status.HTTP_400_BAD_REQUEST)
+            messages.error(request, 'Ошибка, токен подтверждения не найден')
+            return render(request, 'registration/auth_messages.html', {'user_email': 'Token not found'})
         try:
             user = CustomUser.objects.get(verification_token=token)
             user.email_verified = True
-            user.verification_token = ''
-            user.profile.save()
-            return Response({'message': 'Email confirmed successfully'}, status=status.HTTP_200_OK)
+            user.verification_token = None
+            user.save()
+            messages.success(request, 'Почта успешно подтверждена. Ваша учетная запись активирована')
+            return render(request, 'registration/auth_messages.html', {'user_email': user.email})
         except ObjectDoesNotExist:
-            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
-
+            messages.error(request, 'Что то пошло не так, токен неправильный.')
+            return render(request, 'registration/auth_messages.html', {'user_email': 'User not found'})
 
 class UniqueUserNameApiView(APIView):
     def get(self, request):
@@ -113,26 +118,18 @@ class AllertsView(View):
         return HttpResponseRedirect(reverse('home'))
 
 
-logger = logging.getLogger(__name__)
-
-
 class UnregRegistrationApiView(APIView):
     serializer = UnregRegistrationSerializer
-
     def post(self, request):
         csrf_middleware = CsrfViewMiddleware(lambda req: None)
         try:
             csrf_middleware.process_view(request, None, None, None)
         except Exception:
             return Response({'error': 'CSRF token invalid or missing'}, status=status.HTTP_403_FORBIDDEN)
-
         serializer = self.serializer(data=request.data)
         if serializer.is_valid():
             token = serializer.data.get('token')
             ip = serializer.data.get('ip')
             token = token_handler(user_ip=ip, token=token)
             return Response({'token': token}, status=status.HTTP_200_OK)
-
-        # Log the errors for debugging
-        logger.error(f"Serializer errors: {serializer.errors}")
         return Response({'error': 'Invalid data','messages':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

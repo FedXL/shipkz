@@ -4,7 +4,6 @@ from django.conf import settings
 from dotenv import load_dotenv
 from jwt import ExpiredSignatureError, ImmatureSignatureError
 from app_front.management.unregister_authorization.unregister_web_users import generate_random_name
-from app_front.management.utils import get_user_ip
 from legacy.models import WebUsers
 
 
@@ -63,13 +62,8 @@ def check_token(token: str, secret=sharable_secret, is_comment=False) -> tuple[d
             return decoded_token
 
 
-
-
-
-
-
-
-def token_handler(user_ip,token=None):
+def token_handler(user_ip, token=None) -> str:
+    """return jwt token with ip and webusername load"""
     if not token:
         return handle_no_token(user_ip=user_ip)
     else:
@@ -85,6 +79,16 @@ def handle_no_token(user_ip):
                              ip=user_ip)
     return new_token
 
+def handle_no_token_comeback_version(user_ip):
+    """return new token for unregistered user"""
+    new_username = generate_random_name()
+    new_username = 'UNREG_' + new_username
+    web_user = WebUsers.objects.create(web_username=new_username)
+    new_token = create_token(username=new_username,
+                             user_id=web_user.user_id,
+                             ip=user_ip)
+    return new_token, web_user
+
 
 def handle_token(user_ip, token):
     decoded_token = check_token(token)
@@ -94,12 +98,6 @@ def handle_token(user_ip, token):
         return handle_no_token(user_ip)
 
 
-class TokenMashine:
-    def __init__(self, user_ip):
-        self.user_ip = user_ip
-
-    def get_token(self, token):
-        return token_handler(user_ip=self.user_ip, token=token)
 
 
 

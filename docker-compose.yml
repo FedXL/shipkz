@@ -1,19 +1,30 @@
 version: '3.8'
 
 services:
-  web:
+  gunicorn:
     build:
       context: .
       dockerfile: Dockerfile
     command: >
       sh -c "python manage.py collectstatic --noinput &&
-             gunicorn shipkz.wsgi:application --bind 0.0.0.0:8000 & 
-             daphne -b 0.0.0.0 -p 8001 shipkz.asgi:application"
+             gunicorn shipkz.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - static_volume:/var/www/static
       - media_volume:/var/www/media
     expose:
       - "8000"
+    depends_on:
+      - db
+      - redis
+  daphne:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: daphne -b 0.0.0.0 -p 8001 shipkz.asgi:application
+    volumes:
+      - static_volume:/var/www/static
+      - media_volume:/var/www/media
+    expose:
       - "8001"
     depends_on:
       - db
@@ -28,19 +39,19 @@ services:
       POSTGRES_DB: ${POSTGRES_NAME}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-
   nginx:
     image: nginx:latest
     ports:
-      - "127.0.0.1:80:80"
+      - "80:80"
     volumes:
       - ./nginx:/etc/nginx/conf.d
       - static_volume:/var/www/static
       - media_volume:/var/www/media
     depends_on:
-      - web
+      - gunicorn
+      - daphne
   redis:
-    image: redis:latest # Открываем порт Redis
+    image: redis:latest
     expose:
       - "6379"
   celery:
@@ -53,7 +64,7 @@ services:
       - media_volume:/var/www/media
     depends_on:
       - redis
-      - web  # Зависимость от веб-сервиса
+      - gunicorn
   celery-beat:
     build:
       context: .
@@ -64,7 +75,8 @@ services:
       - media_volume:/var/www/media
     depends_on:
       - redis
-      - web
+      - gunicorn
+
 volumes:
   static_volume:
   media_volume:
