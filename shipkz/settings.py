@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'channels',
     'rest_framework',
+    'app_bot.apps.AppBotConfig',
 ]
 
 MIGRATION_MODULES = {
@@ -143,4 +144,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
+
+KAZAKHSTAN_CATCH_CHAT = os.getenv('KAZAKHSTAN_CATCH_CHAT')
+TRADEINN_CATCH_CHAT = os.getenv('TRADEINN_CATCH_CHAT')
 

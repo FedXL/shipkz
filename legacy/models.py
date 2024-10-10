@@ -1,5 +1,10 @@
+import os
+
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from dotenv import load_dotenv
+
 
 class Buyers(models.Model):
     phone = models.BigIntegerField(blank=True, null=True)
@@ -132,7 +137,7 @@ class OrderStatusInfo(models.Model):
         db_table = 'order_status_info'
 
 
-class Orders(models.Model):
+class  Orders(models.Model):
     client = models.ForeignKey('Users', models.DO_NOTHING, db_column='client', blank=True, null=True)
     buyer = models.ForeignKey(Buyers, models.DO_NOTHING, db_column='buyer', blank=True, null=True)
     type = models.CharField(max_length=255, blank=True, null=True)
@@ -239,12 +244,19 @@ class WebUsers(models.Model):
         managed = False
         db_table = 'web_users'
 
+    def get_chat_id(self):
+        if self.is_kazakhstan:
+            chat_id = settings.KAZAKHSTAN_CATCH_CHAT
+        else:
+            chat_id = settings.TRADEINN_CATCH_CHAT
+        return chat_id
+
 
 class WebMessages(models.Model):
     id = models.BigAutoField(primary_key=True)
     message_body = models.CharField(max_length=255, blank=True, null=True)
     is_answer = models.BooleanField(blank=True, null=True)
-    user = models.ForeignKey('WebUsers', models.DO_NOTHING, db_column='user')
+    user = models.ForeignKey(WebUsers, models.DO_NOTHING, db_column='user')
     time = models.DateTimeField(blank=True, null=True)
     message_type = models.CharField(max_length=255, blank=True, null=True)
     is_read = models.BooleanField(blank=True, null=True)
@@ -252,6 +264,17 @@ class WebMessages(models.Model):
     class Meta:
         managed = False
         db_table = 'web_messages'
+
+    def as_dict(self):
+        result = {'message_id': self.id,
+                  'text': self.message_body,
+                  'is_answer': self.is_answer,
+                  'user_id': self.user.user_id,
+                  'time': self.time.strftime("%B %d, %H:%M"),
+                  'message_type': self.message_type,
+                  'is_read': self.is_read
+                  }
+        return result
 
 
 class WebPhotos(models.Model):

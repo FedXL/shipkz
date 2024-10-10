@@ -1,5 +1,5 @@
 import json
-
+from typing import Tuple
 from django.conf import settings
 from django.forms import formset_factory
 from django.http import HttpResponse, HttpResponseRedirect
@@ -11,16 +11,15 @@ from app_auth.mixins import ActiveUserConfirmMixin
 from app_auth.mixins import EmailVerificationRequiredMixin
 from app_auth.models import Profile
 from app_front.forms import UnregisteredOrderForm, OrderForm, RegisterOrderItemForm, RegisterOrderItemFormSet
-from app_front.management.email.email_sender import send_order_notification_email
-from app_front.management.unregister_authorization.token import check_token, create_token, token_handler, \
-    handle_no_token_comeback_version
+from app_front.management.unregister_authorization.token import check_token, handle_no_token_comeback_version
 from app_front.management.utils import get_user_ip
 from app_front.utils import generate_jwt_token
 from legacy.models import Exchange, WebUsers, Orders, WebUsersMeta
 from legacy.serializers import OrdersSerializer
+from app_front.tasks import unregister_web_task_way
+
 
 class TariffsPageView(View):
-
     def get(self, request):
         eur_obj = Exchange.objects.get(valuta='eur')
         usd_obj = Exchange.objects.get(valuta='usd')
@@ -43,11 +42,33 @@ class TariffsPageView(View):
                                                     "data": eur_obj.data
                                                 }
                                             }
+
         json_rates = json.dumps(exchange_rates)
         data = {'exchange_rate': json_rates}
         return render(request,
                       template_name='pages/tariffs.html',
                       context={'data': data})
+
+
+def auth_cookie_handler (request) -> Tuple[HttpResponse, str, WebUsers,str]:
+    """return [response, token, web_user,user_ip] check ShipKzAuthorization cookie and return token and web_user"""
+    user_ip = get_user_ip(request)
+    token = request.COOKIES.get('ShipKZAuthorization', None)
+    decoded_token = check_token(token)
+    if decoded_token:
+        web_username = decoded_token.get('username')
+        web_user = WebUsers.objects.filter(web_username=web_username).first()
+    else:
+        token, web_user = handle_no_token_comeback_version(user_ip=user_ip)
+    response = render(request, template_name='pages/success.html')
+    response.set_cookie('ShipKZAuthorization',
+                        token,
+                        max_age=14 * 24 * 60 * 60,
+                        httponly=False,
+                        secure=not settings.DEBUG)
+
+    return response, token, web_user, user_ip
+
 
 class BaseOrderView(View):
     template_name = ""
@@ -75,60 +96,23 @@ class BaseOrderView(View):
             pointer = 'unregistered'
         if form.is_valid() and  (formset is None or formset.is_valid()):
             data = form.cleaned_data
-            user_ip = get_user_ip(request)
             form_data = form.cleaned_data
             if pointer == 'unregistered':
-                token = request.COOKIES.get('ShipKZAuthorization', None)
-                decoded_token = check_token(token)
-                response = render(request, template_name='pages/success.html',
-                                  context={"pointer": pointer,
-                                           "result": "success",
-                                           "data": data})
-                if decoded_token:
-                    web_username = decoded_token.get('username')
-                    web_user = WebUsers.objects.filter(web_username=web_username).first()
-                else:
-                    token, web_user = handle_no_token_comeback_version(user_ip=user_ip)
-                url = data.get('url')
-                price = data.get('price')
-                count = data.get('count')
-                comment = data.get('comment')
-                email = data.get('email')
-                phone = data.get('phone')
-                user_email, created_email = WebUsersMeta.objects.update_or_create(
-                    web_user=web_user,
-                    field='email',
-                    defaults={'value': email}
-                )
-                user_phone, created_phone = WebUsersMeta.objects.update_or_create(
-                    web_user=web_user,
-                    field='phone',
-                    defaults={'value': phone}
-                )
-                order = Orders.objects.create(
-                    type='WEB_ORDER',
-                    body=form_data,
-                    user_ip=user_ip,
-                    web_user=web_user
-                )
-                send_order_notification_email(to_mail=email,form_data=form_data, order_number=order.id)
-                response.set_cookie('ShipKZAuthorization',
-                                    token,
-                                    max_age=14*24*60*60,
-                                    httponly=False,
-                                    secure=not settings.DEBUG)
+                response,token,web_user,user_ip = auth_cookie_handler(request)
+                unregister_web_task_way.delay(data=form_data, web_user_id=web_user.user_id, user_ip=user_ip)
                 return response
+
             elif pointer =='registered':
-                form_set_data = formset.cleaned_data
-                form_data = form.cleaned_data
-                data = {"country":form_data, 'items': form_set_data}
-                web_user = WebUsers.objects.filter(web_username=customer.username).first()
-                order = Orders.objects.create(
-                    type='WEB_ORDER',
-                    body=data,
-                    user_ip=user_ip,
-                    web_user=web_user
-                )
+                # form_set_data = formset.cleaned_data
+                # form_data = form.cleaned_data
+                # data = {"country":form_data, 'items': form_set_data}
+                # web_user = WebUsers.objects.filter(web_username=customer.username).first()
+                # order = Orders.objects.create(
+                #     type='WEB_ORDER',
+                #     body=data,
+                #     user_ip=user_ip,
+                #     web_user=web_user
+                # )
                 return render(request,template_name='pages/success.html',context={"pointer":pointer,"result":"success","data":data})
         else:
             return render(request,template_name=self.template_name,context={'form': form, 'formset': formset, 'pointer': pointer})

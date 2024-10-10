@@ -138,7 +138,7 @@ def get_web_id_from_text(text):
 
 
 
-def make_message_text(message: list) -> md.text():
+def make_message_text_web_(message: list) -> md.text():
     message = check_lenght(message)
     result = []
     before = message[:1]

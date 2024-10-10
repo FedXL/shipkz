@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.db import models
+
+from app_bot.management.bot_core import web_open_meeting_message_in_bot
 from .models import (
      Buyers, Discounts,
     Documents, EmailTask, Exchange, FastAnswers,
@@ -85,8 +87,15 @@ class WebMessagesAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
 class WebPhotosAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = [field.name for field in WebPhotos._meta.fields]
 
+
+def open_bot_meeting_message(modeladmin, request, queryset):
+    for web_user in queryset:
+        web_open_meeting_message_in_bot(web_user=web_user)
+
+
 class WebUsersAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = ['user_id', 'user_name', 'web_username']
+    actions = [open_bot_meeting_message]
 
 class WebUsersMetaAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = [field.name for field in WebUsersMeta._meta.fields]
