@@ -6,6 +6,9 @@ from app_auth.models import CustomUser, Profile
 class AdminCustomUser(admin.ModelAdmin):
     list_display = ['username', 'email','verification_token','email_verified']
 
+
+
+
 @admin.register(Profile)
 class AdminProfile(admin.ModelAdmin):
     list_display = ['user', 'first_name', 'last_name', 'patronymic_name','phone','email','telegram_id']

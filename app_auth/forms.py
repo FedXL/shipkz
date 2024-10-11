@@ -33,3 +33,13 @@ class ProfileModelForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['phone', 'address', 'first_name', 'last_name', 'patronymic_name','cdek_address', 'telegram_id']
+        labels = {
+            'phone': 'Телефон',
+            'address': 'Адрес',
+            'first_name': 'Имя',
+            'last_name': 'Фамилия',
+            'patronymic_name': 'Отчество',
+            'cdek_address': 'Адрес CDEK',
+            'telegram_id': 'Telegram ID'
+        }
+

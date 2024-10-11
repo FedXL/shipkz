@@ -1,5 +1,5 @@
 html {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 
@@ -71,14 +71,16 @@ header {
 
 .menu-item a {
     display: block;
-    padding: 15px;
+    padding: 18px;
     color: white;
     text-decoration: none;
     font-size: 16px;
     height: 100%;
     white-space: nowrap;
 }
-
+.menu-item {
+    transition: background-color 0.4s ease; /* Adds a 0.5 second transition effect */
+}
 .menu-item:hover {
     background-color: #555;
 }
@@ -105,4 +107,9 @@ footer {
 }
 .mark-main-color{
     color: var(--main-color);
+}
+
+.content-block{
+    margin-top:20px;
+    margin-bottom:20px;
 }

@@ -6,7 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     command: >
-      sh -c "python manage.py collectstatic --noinput &&
+      sh -c "rm -rf /var/www/static/* &&
+             python manage.py collectstatic --noinput &&
              gunicorn shipkz.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - static_volume:/var/www/static

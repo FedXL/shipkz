@@ -257,7 +257,7 @@ class WebMessages(models.Model):
     message_body = models.CharField(max_length=255, blank=True, null=True)
     is_answer = models.BooleanField(blank=True, null=True)
     user = models.ForeignKey(WebUsers, models.DO_NOTHING, db_column='user')
-    time = models.DateTimeField(blank=True, null=True)
+    time = models.DateTimeField(blank=True, null=True, auto_now_add=True)
     message_type = models.CharField(max_length=255, blank=True, null=True)
     is_read = models.BooleanField(blank=True, null=True)
 

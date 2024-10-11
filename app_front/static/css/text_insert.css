@@ -1,7 +1,7 @@
    p {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.6;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
 }
 
 ul {
@@ -10,26 +10,36 @@ ul {
 }
 
 ul li {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.6;
     margin-bottom: 8px;
-    color: #333;
 }
 
 ul li:before {
     content: "• "; /* Используем маркер вместо стандартного */
-    color: var(--main-color); /* Синий цвет для маркера */
+   /* Синий цвет для маркера */
 }
 
 strong {
-    color: var(--main-color);; /* Выделение важного текста */
+    color: var(--main-color); /* Выделение важного текста */
     font-weight: bold;
 }
-p strong {
-    display: block;
-    margin-top: 20px;
-}
 
+
+
+
+.content-block p,
+.content-block li {
+    color: #666666;
+}
 h2 {
-    margin-bottom:16px;
+    color: #444444;
+    font-weight: normal;
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 32px;
+    margin-top: 32px;
+}
+h3 {
+    color: #444444;
 }

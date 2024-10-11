@@ -65,8 +65,8 @@ def auth_cookie_handler (request) -> Tuple[HttpResponse, str, WebUsers,str]:
                         token,
                         max_age=14 * 24 * 60 * 60,
                         httponly=False,
-                        secure=not settings.DEBUG)
-
+                        secure=not settings.DEBUG
+                        )
     return response, token, web_user, user_ip
 
 

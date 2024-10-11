@@ -1,23 +1,30 @@
 {% extends 'components/base.html' %}
+{% block meta_description %}Покупаем и доставляем товары из зарубежных интернет-магазинов транзитом через Казахстан и Кыргызстан{% endblock %}
+{% block style_css %}
+{% endblock %}
 {% block title %}ShipKZ{% endblock %}
 {% block content %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/text_insert.css' %}">
 {% include 'components/yandex-widget.html' %}
+<div class="content-block">
 <p>
     Мы помогаем купить и доставить товары из зарубежных интернет-магазинов в Россию с апреля 2022 года.
         Для доставки товаров мы используем несколько логистических маршрутов,
         основной это транзит через Казахстан и Кыргызстан.
 </p>
-{% include 'components/triple_box.html' %}
+</div>
+<h2>Чем мы лучше обычных форвардеров?</h2>
 
-    <h3> Какие проблемы мы можем решить и в чем наша ценность?</h3>
-    <br>
+    <div class="content-block">
+        {% include 'components/triple_box.html' %}
+    </div>
+<h2> Какие проблемы мы можем решить и в чем наша ценность?</h2>
+<div class="content-block">
     <p>Мы можем привезти любые легальные товары, включая товары санкционного списка:&nbsp;</p>
     <ul>
         <li>автозапчасти и мотозапчасти</li>
         <li>запчасти для лодок и катеров</li>
-        <li>виниловые пластинки и компакт диски</li>
+        <li>виниловые пластинки</li>
         <li>косметика, туалетная вода и духи</li>
         <li>ювелирные украшения и бижутерия</li>
         <li>игрушки и куклы</li>
@@ -35,21 +42,31 @@
         <li>жидкости и смазки</li>
         <li>и многое другое</li>
     </ul>
+</div>
+<div class="content-block">
    <p>Мы сэкономим вам много времени и нервов, и вы не узнаете с удивлением что ваш рюкзак за 20$ входит в санкционный список.
        С нами не нужно заполнять декларацию, прикладывать инвойсы и делать кучу мелких операций,
        которые от вас требуют стандартные форвардеры, все эти заботы мы берем на себя.</p>
+</div>
 
-    <h3>Сроки доставки заказов</h3>
+    <h2>Сроки доставки заказов</h2>
+
+<div class="content-block">
     <br>
     <p>Сроки доставки с европейских и американских интернет магазинов 1-2 недели в Казахстан при экспресс доставках dhl/ups/fedex, доставка наземным путем 18-30 дней.</p>
     <p>Cроки доставки казахскими форвардерами из США, Европы и Англии 7-14 дней.</p>
     <p>Срок доставки из Казахстана в РФ 5-10 дней сдеком, в зависимости от тарифа. Наша скорость вас приятно удивит!</p>
-
-{% include 'components/yandex_map.html' %}
-
+</div>
+    <h2>Отзывы клиентов ShipKZ на яндекс картах</h2>
+<div class="content-block">
+    {% include 'components/yandex_map.html' %}
+</div>
+    <h2>Схема Логистики (транзит)</h2>
+<div class="content-block">
 <img src="{% static 'images/site-image.jpg' %}" alt="Parallax Image" style="max-width: 100%; height: auto; display: block; margin:auto;">
-
-
+</div>
+<h2>Сделать Заказ</h2>
+<div class="content-block">
 {% if user.is_active %}
     {% if user.email_verified %}
         {% include 'components/reg_form.html' %}
@@ -59,8 +76,7 @@
 {% else %}
     {% include 'components/unreg_form.html' %}
 {% endif %}
-
-
+</div>
 
 <style>
 .youtube-container {
@@ -68,9 +84,8 @@
     flex-wrap: wrap;
 }
 
-
 .youtube-link {
-    flex: 1 1 230px; /* Элемент занимает минимум 230px */
+    flex: 1 1 250px; /* Элемент занимает минимум 230px */
     gap: 5px;
     margin: auto;
     padding: 5px;
@@ -79,11 +94,11 @@
 }
 .youtube-link a{
 
-
 }
 .youtube-link img {
     max-width: 100%;
     height: auto;
+    border: 2px solid #262525;
     transition: transform 0.5s ease; /* Плавный переход при наведении */
     transform-style: preserve-3d; /* Сохраняет 3D-эффекты */
 }
@@ -94,46 +109,55 @@
 
 </style>
 
-<div class="youtube-container">
-    <div class="youtube-link" >
-        <a href="https://www.youtube.com/shorts/iTc2IKdYfcs"  target="_blank">
-            <img src="{% static 'images/youtube/1.jpg' %}" alt="youtube">
-        </a>
-    </div>
-    <div class="youtube-link">
-        <a href="https://www.youtube.com/shorts/Q0l-jq1DSPU" target="_blank">
-            <img src="{% static 'images/youtube/2.jpg' %}" alt="youtube">
-        </a>
-    </div>
-    <div class="youtube-link">
-        <a href="https://www.youtube.com/shorts/VLpewU19Duk" target="_blank">
-            <img src="{% static 'images/youtube/3.jpg' %}" alt="youtube">
-        </a>
-    </div>
-    <div class="youtube-link">
-        <a href="https://www.youtube.com/watch?v=hzDWdpspuvc&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
-            <img src="{% static 'images/youtube/4.jpg' %}" alt="youtube">
-        </a>
-    </div>
-    <div class="youtube-link">
-        <a href="https://www.youtube.com/watch?v=_67kMEUVNrI&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
-            <img src="{% static 'images/youtube/5.jpg' %}" alt="youtube">
-        </a>
-    </div>
-    <div class="youtube-link">
-        <a href="https://www.youtube.com/watch?v=e_1CDUk1Tz4&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
-            <img src="{% static 'images/youtube/6.jpg' %}" alt="youtube">
-        </a>
-    </div>
-    <div class="youtube-link">
-        <a href="https://www.youtube.com/watch?v=6V3kGQ3E9aA&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
-            <img src="{% static 'images/youtube/7.jpg' %}" alt="youtube">
-        </a>
-    </div>
-    <div class="youtube-link">
-        <a href="https://www.youtube.com/watch?v=6WwFLCDs9fY&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
-            <img src="{% static 'images/youtube/8.jpg' %}" alt="youtube">
-        </a>
+<h2>Распаковки Клиентов ShipKZ</h2>
+
+<div class="content-block">
+    <p style="text-align: center;">Больше распаковок на нашем <a href="https://www.youtube.com/@shipkz-ru/featured">
+        <strong>Youtube канале ShipKZ</strong></a></p>
+</div>
+
+<div class="content-block">
+    <div class="youtube-container">
+        <div class="youtube-link" >
+            <a href="https://www.youtube.com/shorts/iTc2IKdYfcs"  target="_blank">
+                <img src="{% static 'images/youtube/1.jpg' %}" alt="youtube">
+            </a>
+        </div>
+        <div class="youtube-link">
+            <a href="https://www.youtube.com/shorts/Q0l-jq1DSPU" target="_blank">
+                <img src="{% static 'images/youtube/2.jpg' %}" alt="youtube">
+            </a>
+        </div>
+        <div class="youtube-link">
+            <a href="https://www.youtube.com/shorts/VLpewU19Duk" target="_blank">
+                <img src="{% static 'images/youtube/3.jpg' %}" alt="youtube">
+            </a>
+        </div>
+        <div class="youtube-link">
+            <a href="https://www.youtube.com/watch?v=hzDWdpspuvc&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
+                <img src="{% static 'images/youtube/4.jpg' %}" alt="youtube">
+            </a>
+        </div>
+        <div class="youtube-link">
+            <a href="https://www.youtube.com/watch?v=_67kMEUVNrI&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
+                <img src="{% static 'images/youtube/5.jpg' %}" alt="youtube">
+            </a>
+        </div>
+        <div class="youtube-link">
+            <a href="https://www.youtube.com/watch?v=e_1CDUk1Tz4&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
+                <img src="{% static 'images/youtube/6.jpg' %}" alt="youtube">
+            </a>
+        </div>
+        <div class="youtube-link">
+            <a href="https://www.youtube.com/watch?v=6V3kGQ3E9aA&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
+                <img src="{% static 'images/youtube/7.jpg' %}" alt="youtube">
+            </a>
+        </div>
+        <div class="youtube-link">
+            <a href="https://www.youtube.com/watch?v=6WwFLCDs9fY&embeds_referring_euri=https%3A%2F%2Fshipkz.ru%2F&source_ve_path=Mjg2NjY" target="_blank">
+                <img src="{% static 'images/youtube/8.jpg' %}" alt="youtube">
+            </a>
+        </div>
     </div>
 </div>
 {% include 'components/mini_messanger.html' %}

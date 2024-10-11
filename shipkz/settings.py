@@ -40,7 +40,7 @@ MIGRATION_MODULES = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -48,7 +48,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-
 ]
 
 ROOT_URLCONF = 'shipkz.urls'
@@ -103,7 +102,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-STATIC_URL = 'static/'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGOUT_REDIRECT_URL = 'home'
 
@@ -126,12 +125,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # APPEND_SLASH = True
 # MEDIA_URL = '/shipkz/media/'
 # STATIC_URL = '/shipkz/static/'
-# MEDIA_URL = '/media/'
-# STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
 STATIC_ROOT =  '/var/www/static'
 MEDIA_ROOT = '/var/www/media'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# settings.py
 
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
@@ -147,4 +148,4 @@ CELERY_TIMEZONE = 'UTC'
 
 KAZAKHSTAN_CATCH_CHAT = os.getenv('KAZAKHSTAN_CATCH_CHAT')
 TRADEINN_CATCH_CHAT = os.getenv('TRADEINN_CATCH_CHAT')
-
+ORDERS_CATCH_CHAT = os.getenv('ORDERS_CATCH_CHAT')
