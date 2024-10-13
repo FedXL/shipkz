@@ -9,8 +9,7 @@
                 <th scope="col">Номер заказа</th>
                 <th scope="col">Дата заказа</th>
                 <th scope="col">Статус заказа</th>
-                <th scope="col">Сумма заказа</th>
-                <th scope="col">Действия</th>
+                <th scope="col">Дней в пути</th>
             </tr>
             </thead>
             <tbody>
@@ -19,8 +18,7 @@
                     <th scope="row">{{ order.id }}</th>
                     <td>{{ order.created_at }}</td>
                     <td>{{ order.status }}</td>
-                    <td>{{ order.total_price }}</td>
-                     <td>{{ order.body|slice:":50" }}</td>
+                    <td>{{ order.days_in_transit }}34</td>
                 </tr>
             {% endfor %}
             </tbody>

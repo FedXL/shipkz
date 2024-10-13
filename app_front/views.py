@@ -176,16 +176,13 @@ class LkOrdersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, V
         return render(request, 'lk-pages/lk-orders-page.html',context={'data':data})
 
 
-def get_pre_orders_by_username(username):
-    web_user = WebUsers.objects.filter(web_username=username).first()
-    orders = Orders.objects.filter(web_user=web_user,status=None).order_by('-id')
-    pass
+
 
 
 class LkPreordersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
     def get(self, request):
-        data=get_pre_orders_by_username(request.user.username)
-        return render(request, 'lk-pages/lk-pre-orders-page.html')
+        data=get_orders_by_username(request.user.username, pre=True)
+        return render(request, 'lk-pages/lk-pre-orders-page.html',context={'data':data})
 
 
 class LkProfilePageView(View):
