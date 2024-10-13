@@ -16,6 +16,7 @@ table {
 }
 :root {
     --main-color: #00afca;
+    --dark-theme: #2c4054;
 }
 
 fieldset {

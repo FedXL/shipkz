@@ -1,17 +1,5 @@
-FROM python:3.12-alpine
-
-# Set the working directory
+FROM python:3.12-slim
 WORKDIR /app
-
-# Copy only the requirements file first
 COPY req.txt /app/
-
-# Install dependencies
-RUN pip install --no-cache-dir -r req.txt
-
-# Copy the rest of the application code
+RUN pip install -r req.txt
 COPY . /app/
-
-# Set environment variables to avoid buffering and enable logging
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1

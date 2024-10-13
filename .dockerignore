@@ -1,1 +1,66 @@
 legacy/legacy_codebase/**
+.idea/
+.pytest_cache/
+venv/
+git
+.git
+.git/
+.venv
+.idea
+*.git
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Ignore virtual environment directories
+
+
+.venv/
+
+
+# Ignore test and coverage results
+.coverage
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Ignore Django specific files
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+local_settings.py
+db.sqlite3
+
+# Ignore environment variables files
+
+
+# Ignore IDE and editor files
+.idea/
+.vscode/
+*.swp
+*~
+
+# Ignore build files
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+*.egg
+*.whl
+
+# Ignore Dockerfile and docker-compose files
+Dockerfile
+docker-compose.yml
+
+# Ignore node_modules if using Node.js
+node_modules/
+
+# Ignore static files

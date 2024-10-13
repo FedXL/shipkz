@@ -122,13 +122,13 @@
     }
 
 .control-form-button:hover {
-        background-color: gray;
-        border: 2px solid var(--main-color);
+        background-color: var(--dark-theme);
+        border: 2px solid var(--dark-theme);
         scale: 1.1;
     }
 .submit-button:hover {
-        background-color: gray;
-        border: 2px solid var(--main-color);
+        background-color: var(--dark-theme);
+        border: 2px solid var(--dark-theme);
         scale: 1.1;
     }
 

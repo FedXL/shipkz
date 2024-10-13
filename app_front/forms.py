@@ -11,7 +11,8 @@ class OrderForm(forms.Form):
             ('ENGLAND', 'Англия'),
             ('OTHER', 'Другое'),
         ],
-        widget=forms.RadioSelect
+        widget=forms.RadioSelect,
+        initial='EUROPE'  # Значение по умолчанию
     )
 
 

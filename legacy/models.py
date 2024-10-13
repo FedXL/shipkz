@@ -1,10 +1,6 @@
-import os
-
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
-from dotenv import load_dotenv
-
 
 class Buyers(models.Model):
     phone = models.BigIntegerField(blank=True, null=True)
@@ -113,7 +109,7 @@ class OrderStatus(models.Model):
 
 
 class OrderStatusInfo(models.Model):
-    order = models.OneToOneField('Orders', models.DO_NOTHING)
+    order = models.OneToOneField('Orders', models.DO_NOTHING,related_name='ori')
     is_forward = models.BooleanField()
     paid = models.DateTimeField()
     arrived_to_forward = models.DateTimeField(blank=True, null=True)
@@ -131,6 +127,7 @@ class OrderStatusInfo(models.Model):
     host_country = models.CharField(max_length=255, blank=True, null=True)
     buyer = models.BigIntegerField(blank=True, null=True)
     buyer_reward = models.CharField(max_length=255, blank=True, null=True)
+
 
     class Meta:
         managed = False

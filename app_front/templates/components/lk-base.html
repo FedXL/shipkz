@@ -12,9 +12,9 @@
     .lk-nav-container {
         grid-column: 1; /* Исправлено на правильный синтаксис */
         background-color: white;
-        /*border: 2px solid var(--main-color);*/
+
         border-radius: 8px;
-        /**/
+
         display: flex;
         flex-direction: column;
     }
@@ -34,13 +34,12 @@
     }
 
     .lk-menu-item:hover, .lk-menu-item.active {
-        background-color: var(--main-color);
+        background-color: var(--dark-theme);
+        border: 3px solid var(--dark-theme);
         color: white;
     }
     .lk-content-container {
-
         grid-column: 2;
-
         background-color: white;
         padding: 5px;
         border: 3px solid var(--main-color);
@@ -48,7 +47,9 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         overflow: hidden;
     }
-
+    .lk-content-container .order-form {
+    box-shadow: none;
+}
     /* Адаптивность для мобильных устройств */
     @media (max-width: 768px) {
         .lk-container {
