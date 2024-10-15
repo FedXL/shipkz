@@ -1,6 +1,7 @@
 import json
 from typing import Tuple
 from django.conf import settings
+from django.contrib import messages
 from django.forms import formset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
@@ -11,12 +12,13 @@ from app_auth.mixins import ActiveUserConfirmMixin
 from app_auth.mixins import EmailVerificationRequiredMixin
 from app_auth.models import Profile
 from app_front.forms import UnregisteredOrderForm, OrderForm, RegisterOrderItemForm, RegisterOrderItemFormSet
-from app_front.management.orders.orders_handler import get_orders_by_username
+from app_front.management.orders.orders_handler import get_orders_by_username_pre, get_orders_by_username_full
 from app_front.management.unregister_authorization.token import check_token, handle_no_token_comeback_version
 from app_front.management.utils import get_user_ip
 from app_front.utils import generate_jwt_token
 from legacy.models import Exchange, WebUsers, Orders, WebUsersMeta
 from app_front.tasks import unregister_web_task_way
+from legacy.serializers import OrderFullSerializer, OrdersSerializerPre
 
 
 class TariffsPageView(View):
@@ -171,17 +173,26 @@ class LkCreateOrderPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixi
 
 class LkOrdersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
     def get(self, request):
-        data=get_orders_by_username(request.user.username)
-
+        data=get_orders_by_username_full(request.user.username)
         return render(request, 'lk-pages/lk-orders-page.html',context={'data':data})
 
+class LkOrderPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
+    def get(self, request,order_id):
 
-
+        user = request.user
+        web_user = user.profile.web_user
+        order = Orders.objects.filter(id=order_id,web_user=web_user).first()
+        if order:
+            data = OrderFullSerializer(order).data
+            data_details = OrdersSerializerPre(order).data
+            return render(request, 'lk-pages/lk-order-page.html', context={'order': data,'data_details':data_details})
+        messages.error(request, f'У вас нет доступа к данным этого заказа {order_id}.')
+        return HttpResponseRedirect(reverse('auth_messages'))
 
 
 class LkPreordersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
     def get(self, request):
-        data=get_orders_by_username(request.user.username, pre=True)
+        data=get_orders_by_username_pre(request.user.username, pre=True)
         return render(request, 'lk-pages/lk-pre-orders-page.html',context={'data':data})
 
 

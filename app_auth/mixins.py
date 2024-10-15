@@ -19,8 +19,3 @@ class ActiveUserConfirmMixin(AccessMixin):
         return super().dispatch(request, *args, **kwargs)
 
 
-class ActiveUser23RequiredMixin(AccessMixin):
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_active:
-            return HttpResponseRedirect(reverse('logout'))
-        return super().dispatch(request, *args, **kwargs)

@@ -24,5 +24,5 @@ document.addEventListener('scroll', function() {
 
     // Измените значение 0.5 для настройки скорости перемещения изображения
     const translateY = scrollPosition * 0.5;
-    image.style.transform = `translate(-50%, calc(-50% + ${translateY}px))`;
+    image.style.transform = `translate(-50%, calc(-55% + ${translateY}px)) scale(0.8)`;
 });

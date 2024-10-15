@@ -1,0 +1,142 @@
+{% extends 'components/lk-base.html' %}
+{% block lk_content %}
+
+<style>
+    .progress-item {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        width: 30px;
+        height: 30px;
+        margin-right: 5px;
+         flex-shrink: 0;
+    }
+    .progress-full {
+        border-radius: 5px;
+        background-color: var(--main-color);
+    }
+    .progress-empty{
+        border-radius: 5px;
+        background-color: transparent;
+        border: 3px solid var(--main-color);
+        opacity: 0.5;
+    }
+
+
+.order-container{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.order-number-container {
+    border-radius: 5px;
+    margin-right: 10px;
+    background-color: transparent;
+    border: var(--main-color) 3px solid;
+    min-height: 50px;
+    display: inline-flex; /* inline-flex позволяет контейнеру расширяться только по содержимому */
+    padding: 0 10px; /* Добавляем отступы, чтобы текст не прилипал к границе */
+    white-space: nowrap; /* Отключаем перенос текста */
+    max-width: fit-content; /* Устанавливаем ширину по содержимому */
+}
+
+.order-info-window{
+    flex: 1 1;
+    min-width: 250px;
+    min-height: 60px;
+    border-radius: 5px;
+    background-color: transparent;
+    border-bottom: var(--main-color) 3px solid;
+    margin-left: 10px;
+}
+.order-day-left {
+    border-radius: 5px;
+    background-color: transparent;
+    border: var(--main-color) 3px solid;
+    flex: 1 1;
+    max-width: 60px;
+    margin-left: 5px;
+}
+.order-status-row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+
+
+</style>
+  <h2>ЗАКАЗ {{order.id}}</h2>
+<div class="order-container">
+    <div class="order-status-row">
+        <div style="margin-right: 20px;">
+            Магазин: {{order.order_status_info.shop}}
+        </div>
+        <div>
+            Дней в пути: {{order.days_in_way}}
+        </div>
+    </div>
+{% for step in order.order_status_info.progress_bar%}
+        <div class="order-status-row">
+{% if step.point_data %}
+        <div class="progress-item progress-full" title="{{step.point_text}}">
+        </div>
+{%else%}
+        <div class="progress-item progress-empty" title="{{step.point_text}}">
+        </div>
+{%endif%}
+{%if step.point_data %} {{step.point_data}} {%endif%} {{step.point_text}}
+    </div>
+{% endfor %}
+
+</div>
+<div class="order-info-window">
+
+    <div>Трек: {{order.order_status_info.trek}}</div>
+    <div>Почтовая служба: {{order.order_status_info.post_service}}</div>
+    <div>СДЕК: {{order.order_status_info.cdek}}</div>
+
+
+</div>
+
+<div class="order-status-column">
+            {% for item in data_details.items %}
+    <div class="order-status-row">
+                    <div class="order-item" >
+                        <div class="order-item-cont">
+                        <strong class="low-text-content">Ссылка:</strong>
+                        </div>
+                        <div class="order-item-cont">
+                            <a href="{{ item.item_link }}" target="_blank">{{ item.item_link|slice:":50" }}...</a>
+                        </div>
+                    </div>
+                    <div class="order-item">
+                        <div class="order-item-cont">
+                        <strong class="low-text-content">Количество:</strong>
+                        </div>
+                        <div class="order-item-cont">
+                            {{ item.item_count }}
+                        </div>
+                    </div>
+                    <div class="order-item">
+                        <div class="order-item-cont">
+                        <strong class="low-text-content">Комментарий:</strong>
+                        </div>
+                        <div class="order-item-cont">
+                            <span class="comment-truncated">
+                        {% if item.item_comment %}
+                        {{ item.item_comment }}
+                        {% else %}
+                        Нет комментария
+                        {% endif %}
+                            </span>
+                        </div>
+                    </div>
+        </div>
+            {% endfor %}
+</div>
+
+{% endblock %}
+

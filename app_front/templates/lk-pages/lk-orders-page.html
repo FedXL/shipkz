@@ -1,30 +1,100 @@
 {% extends 'components/lk-base.html' %}
 {% block lk_content %}
     <h2>ВАШИ ЗАКАЗЫ</h2>
+<style>
+    .progress-item {
+        width: 30px;
+        height: 30px;
 
-    <div class="container">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Номер заказа</th>
-                <th scope="col">Дата заказа</th>
-                <th scope="col">Статус заказа</th>
-                <th scope="col">Дней в пути</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for order in data %}
-                <tr>
-                    <th scope="row">{{ order.id }}</th>
-                    <td>{{ order.created_at }}</td>
-                    <td>{{ order.status }}</td>
-                    <td>{{ order.days_in_transit }}34</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        margin-right: 5px;
+    }
+    .progress-full {
+        border-radius: 5px;
+
+        background-color: var(--main-color);
+    }
+    .progress-empty{
+        border-radius: 5px;
+
+        background-color: transparent;
+        border: 3px solid var(--main-color);
+        opacity: 0.5;
+    }
+.order-number-container {
+    border-radius: 5px;
+    margin-right: 10px;
+    background-color: transparent;
+    border: var(--main-color) 3px solid;
+    width: 80px;
+    height: 50px;
+}
+
+.order-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.order-info-window{
+    flex: 1 1;
+    min-width: 250px;
+    min-height: 60px;
+    border-radius: 5px;
+    background-color: transparent;
+    border: var(--main-color) 3px solid;
+    margin-left: 10px;
+}
+.order-day-left {
+    border-radius: 5px;
+    background-color: transparent;
+    border: var(--main-color) 3px solid;
+    flex: 1 1;
+    max-width: 60px;
+    margin-left: 5px;
+    font-size: 24px;
+}
+@media screen and (max-width: 600px) {
+    .order-container{
+        flex-direction: column;
+    }
+}
+.order-container:hover{
+    background-color: var(--dark-theme);
+    color: white;
+}
+
+
+</style>
+
+{% for order in data %}
+<a href="{% url 'lk-order' order.id %}">
+<div class="order-container">
+<div class="order-number-container">
+    {{order.id}}
+    {{order.order_status_info.shop|slice:":5"}}...
+</div>
+
+{% for step in order.order_status_info.progress_bar%}
+{% if step.point_data %}
+<div class="progress-item progress-full" title="{{step.point_data}} {{step.point_text}}">
+</div>
+{%else%}
+<div class="progress-item progress-empty" title="{{step.point_text}}">
+</div>
+{%endif%}
+{%endfor%}
+<div class="order-info-window">
+
+    <span>{{order.order_status_info.status_text}}</span>
+    <span>{{order.support_header_text}}</span>
+</div>
+    <div class="order-day-left" title="Дней в пути">
+        <span>{{order.days_in_way}}</span>
     </div>
+</div>
+</a>
+{% endfor %}
 {% endblock %}
-{% block scripts %}
 
-{% endblock %}

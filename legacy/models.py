@@ -109,7 +109,7 @@ class OrderStatus(models.Model):
 
 
 class OrderStatusInfo(models.Model):
-    order = models.OneToOneField('Orders', models.DO_NOTHING,related_name='ori')
+    order = models.OneToOneField('Orders', models.DO_NOTHING, related_name='ori')
     is_forward = models.BooleanField()
     paid = models.DateTimeField()
     arrived_to_forward = models.DateTimeField(blank=True, null=True)
@@ -117,6 +117,7 @@ class OrderStatusInfo(models.Model):
     arrived_to_host_country = models.DateTimeField(blank=True, null=True)
     received_in_host_country = models.DateTimeField(blank=True, null=True)
     send_to_ru = models.DateTimeField(blank=True, null=True)
+
     success = models.DateTimeField(blank=True, null=True)
     relative_price = models.CharField(max_length=255)
     shop = models.CharField(max_length=255)

@@ -20,18 +20,26 @@ ul li:before {
    /* Синий цвет для маркера */
 }
 
-strong {
+.strong-theme-text {
     color: var(--main-color); /* Выделение важного текста */
     font-weight: bold;
 }
-
-
 
 
 .content-block p,
 .content-block li {
     color: #666666;
 }
+
+.low-text-content {
+    color: #666666;
+}
+.strong-text-content{
+    color: #444444;
+    font-weight: bold;
+}
+
+
 h2 {
     color: #444444;
     font-weight: normal;

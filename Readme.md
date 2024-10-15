@@ -10,3 +10,7 @@
 
 ### Мысли
 https://drive.google.com/file/d/1yezIh0CK7UqjQRVVkNU_svJv486CTKAE/view?usp=sharing
+
+### Authorization 
+- django EmailVerificationRequiredMixin,ActiveUserConfirmMixin
+- токен в куку app_auth/static/js/token_auth.js

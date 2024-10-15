@@ -52,9 +52,11 @@ class OrderStatusAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
 
 class OrderStatusInfoAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = [field.name for field in OrderStatusInfo._meta.fields]
+    search_fields = ['order__id']
 
 class OrdersAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = [field.name for field in Orders._meta.fields]
+    search_fields = ['id','web_user__web_username']
 
 class ParceTaskAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = [field.name for field in ParceTask._meta.fields]

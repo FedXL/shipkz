@@ -1,33 +1,123 @@
 {% extends 'components/lk-base.html' %}
 {% block lk_content %}
-    <h2>ВАШИ ЗАЯВКИ</h2>
-<th scope="col">Номер заявки</th>
-                <th scope="col">Дата заказа</th>
- <th scope="row">{{ order.id }}</th>
-                    <td>{{ order.created_at }}</td>
+{% load static %}
+
+<style>
+    .order-container {
+        margin-bottom: 40px;
+        padding: 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-title {
+        margin-bottom: 20px;
+    }
+
+    .order-items {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-bottom: 2px solid #ddd;
+    }
+
+    .order-item  {
+        flex: 1 1 30%;
+        margin: 5px 0;
+        flex-direction: column;
+    }
+    .order-item-cont {
+        display: flex;
+
+    }
+
+    .order-item a  {
+        color: #3498db;
+        text-decoration: none;
+    }
+
+    .order-item a:hover {
+        text-decoration: underline;
+    }
+
+    .comment-truncated {
+        display: inline-block;
+        max-width: 300px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    /* Мобильная версия */
+    @media (max-width: 768px) {
+        .order-items {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .order-item {
+            width: 100%;
+        }
+    }
+    .delete{
+        background-color: white;
+        color : var(--main-color);
+        border: 2px solid var(--main-color);
+        padding: 5px 10px;
+        text-decoration: none;
+        display: flex;
+        font-size: 18px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    .delete:hover{
+        background-color: var(--dark-theme);
+        color: white;
+    }
+
+</style>
+<h2>Ваши заявки</h2>
 
 {% for order in data %}
-    <div class="container">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Позиция</th>
-                <th scope="col">Количество</th>
-                <th scope="col">Комментарий</th>
-            </tr>
-            </thead>
-            <tbody>
-
-                <tr>
-                    <td>{{ order.status }}</td>
-                    <td>{{ order.total_price }}</td>
-                     <td>{{ order.body|slice:":50" }}</td>
-                </tr>
-
-            </tbody>
-        </table>
+    <div class="order-container">
+        <div class="order-title">Заявка № {{ order.id }} от {{ order.date }}</div>
+        <div class="order-items">
+            {% for item in order.items %}
+                    <div class="order-item" >
+                        <div class="order-item-cont">
+                        <strong class="low-text-content">Ссылка:</strong>
+                        </div>
+                        <div class="order-item-cont">
+                            <a href="{{ item.item_link }}" target="_blank">{{ item.item_link|slice:":50" }}...</a>
+                        </div>
+                    </div>
+                    <div class="order-item">
+                        <div class="order-item-cont">
+                        <strong class="low-text-content">Количество:</strong>
+                        </div>
+                        <div class="order-item-cont">
+                            {{ item.item_count }}
+                        </div>
+                    </div>
+                    <div class="order-item">
+                        <div class="order-item-cont">
+                        <strong class="low-text-content">Комментарий:</strong>
+                        </div>
+                        <div class="order-item-cont">
+                            <span class="comment-truncated">
+                        {% if item.item_comment %}
+                        {{ item.item_comment }}
+                        {% else %}
+                        Нет комментария
+                        {% endif %}
+                            </span>
+                        </div>
+                        </div>
+            <button class="delete"> Удалить </button>
+            {% endfor %}
+        </div>
     </div>
 {% endfor %}
-{% endblock %}
-{% block scripts %}
 {% endblock %}

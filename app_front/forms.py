@@ -16,8 +16,6 @@ class OrderForm(forms.Form):
     )
 
 
-
-
 class UnregisteredOrderForm(OrderForm):
     url = forms.CharField(
         label='Ссылка на товар:',
