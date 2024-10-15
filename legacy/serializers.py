@@ -116,17 +116,21 @@ class OrderStatusInfoSerializer(serializers.ModelSerializer):
                             host_country=country,
                             time=point_time)
 
-        if obj.cdek:
-            text += f' СДЕК {obj.cdek}'
-        elif obj.got_track:
-            if obj.is_forward:
-                text += " Доставка Форвардером"
-            else:
-                if obj.post_service:
-                    text += f' ТРЕК {obj.trek} Почтовая служба {obj.post_service}'
+        # if obj.cdek:
+        #     text += f' СДЕК {obj.cdek}'
+        # elif obj.got_track:
+        #     if obj.is_forward:
+        #         text += " Доставка Форвардером"
+        #     else:
+        #         if obj.post_service:
+        #             text += f' ТРЕК {obj.trek} Почтовая служба {obj.post_service}'
         return text
 
 class OrderFullSerializer(OrdersSerializerPre):
     order_status_info = OrderStatusInfoSerializer(source='ori')
+    start_time = serializers.SerializerMethodField()
+
+    def get_start_time(self,obj):
+        return obj.time.strftime("%d %b %Y")
 
 

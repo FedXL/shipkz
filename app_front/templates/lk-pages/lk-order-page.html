@@ -27,6 +27,7 @@
     flex-direction: column;
     margin-bottom: 20px;
     margin-top: 20px;
+
 }
 
 .order-number-container {
@@ -45,10 +46,11 @@
     flex: 1 1;
     min-width: 250px;
     min-height: 60px;
-    border-radius: 5px;
     background-color: transparent;
-    border-bottom: var(--main-color) 3px solid;
     margin-left: 10px;
+}
+.order-info-window div {
+    padding : 3px;
 }
 .order-day-left {
     border-radius: 5px;
@@ -63,23 +65,37 @@
     flex-direction: row;
     align-items: center;
     margin-bottom: 5px;
+    margin-left:10px;
+}
+
+.order-row{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 5px;
+    padding: 3px;
+    border: 2px solid #e0e0e0;
+    flex-wrap: wrap;
+
+}
+.order-item{
+    margin: 10px;
+    padding: 5px;
 }
 
 
-
 </style>
-  <h2>ЗАКАЗ {{order.id}}</h2>
+  <h2>Заказ {{order.id}} </h2>
 <div class="order-container">
-    <div class="order-status-row">
-        <div style="margin-right: 20px;">
-            Магазин: {{order.order_status_info.shop}}
-        </div>
-        <div>
-            Дней в пути: {{order.days_in_way}}
-        </div>
+    <div class="order-info-window">
+        <div><span class="strong-text-content">Магазин:</span> {{order.order_status_info.shop}}</div>
+        <div><span class="strong-text-content">Трек:</span> {{order.order_status_info.trek}}</div>
+        <div><span class="strong-text-content">Почтовая служба:</span> {{order.order_status_info.post_service}}</div>
+        <div><span class="strong-text-content">СДЕК:</span> {{order.order_status_info.cdek}}</div>
     </div>
+    <br>
+    <br>
 {% for step in order.order_status_info.progress_bar%}
-        <div class="order-status-row">
+<div class="order-status-row">
 {% if step.point_data %}
         <div class="progress-item progress-full" title="{{step.point_text}}">
         </div>
@@ -87,56 +103,38 @@
         <div class="progress-item progress-empty" title="{{step.point_text}}">
         </div>
 {%endif%}
-{%if step.point_data %} {{step.point_data}} {%endif%} {{step.point_text}}
-    </div>
+{%if step.point_data %} {{step.point_data}} {%endif%} {{step.point_text}}</div>
 {% endfor %}
+    <br>
+    <div class="order-info-window">
+        <span class="strong-text-content">Дней в пути:</span> {{order.days_in_way}}
+    </div>
 
 </div>
-<div class="order-info-window">
-
-    <div>Трек: {{order.order_status_info.trek}}</div>
-    <div>Почтовая служба: {{order.order_status_info.post_service}}</div>
-    <div>СДЕК: {{order.order_status_info.cdek}}</div>
-
-
-</div>
-
-<div class="order-status-column">
-            {% for item in data_details.items %}
-    <div class="order-status-row">
-                    <div class="order-item" >
-                        <div class="order-item-cont">
-                        <strong class="low-text-content">Ссылка:</strong>
-                        </div>
-                        <div class="order-item-cont">
-                            <a href="{{ item.item_link }}" target="_blank">{{ item.item_link|slice:":50" }}...</a>
-                        </div>
-                    </div>
-                    <div class="order-item">
-                        <div class="order-item-cont">
-                        <strong class="low-text-content">Количество:</strong>
-                        </div>
-                        <div class="order-item-cont">
-                            {{ item.item_count }}
-                        </div>
-                    </div>
-                    <div class="order-item">
-                        <div class="order-item-cont">
-                        <strong class="low-text-content">Комментарий:</strong>
-                        </div>
-                        <div class="order-item-cont">
-                            <span class="comment-truncated">
-                        {% if item.item_comment %}
-                        {{ item.item_comment }}
-                        {% else %}
-                        Нет комментария
-                        {% endif %}
-                            </span>
-                        </div>
-                    </div>
+<h2>Товары</h2>
+<div class="order-status-table">
+    {% for item in data_details.items %}
+    <div class="order-row">
+        <div class="order-item">
+            <strong class="low-text-content">Ссылка:</strong>
+            <a style="color:#3498db" href="{{ item.item_link }}" target="_blank">{{ item.item_link|truncatechars:30 }} </a>
         </div>
-            {% endfor %}
+        <div class="order-item">
+            <strong class="low-text-content">Количество:</strong>
+            {{ item.item_count }}
+        </div>
+        <div class="order-item">
+            <strong class="low-text-content">Комментарий:</strong>
+            <span class="comment-truncated">
+                {% if item.item_comment %}
+                {{ item.item_comment }}
+                {% else %}
+                Нет комментария
+                {% endif %}
+            </span>
+        </div>
+    </div>
+    {% endfor %}
 </div>
-
 {% endblock %}
 

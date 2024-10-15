@@ -62,7 +62,7 @@ def auth_cookie_handler (request) -> Tuple[HttpResponse, str, WebUsers,str]:
         web_user = WebUsers.objects.filter(web_username=web_username).first()
     else:
         token, web_user = handle_no_token_comeback_version(user_ip=user_ip)
-    response = render(request, template_name='pages/success.html')
+    response = render(request, template_name='registration/auth_messages.html')
     response.set_cookie('ShipKZAuthorization',
                         token,
                         max_age=14 * 24 * 60 * 60,
@@ -89,9 +89,9 @@ class BaseOrderView(View):
     def post(self, request):
         customer = request.user
         if customer.is_authenticated and customer.email_verified:
-            form = OrderForm(request.POST)
-            formset = RegisterOrderItemFormSet(request.POST)
+
             pointer = 'registered'
+            return redirect('lk-create-order')
         else:
             form = UnregisteredOrderForm(request.POST)
             formset = None
@@ -100,24 +100,20 @@ class BaseOrderView(View):
             data = form.cleaned_data
             form_data = form.cleaned_data
             if pointer == 'unregistered':
+                messages.success(request, 'Ваша заявка успешно получена успешно получена')
                 response,token,web_user,user_ip = auth_cookie_handler(request)
                 unregister_web_task_way.delay(data=form_data, web_user_id=web_user.user_id, user_ip=user_ip)
-                return response
+
 
             elif pointer =='registered':
-                # form_set_data = formset.cleaned_data
-                # form_data = form.cleaned_data
-                # data = {"country":form_data, 'items': form_set_data}
-                # web_user = WebUsers.objects.filter(web_username=customer.username).first()
-                # order = Orders.objects.create(
-                #     type='WEB_ORDER',
-                #     body=data,
-                #     user_ip=user_ip,
-                #     web_user=web_user
-                # )
-                return render(request,template_name='pages/success.html',context={"pointer":pointer,"result":"success","data":data})
+                redirect('lk-create-order')
+                # messages.error(request, 'Как вы сюда попали? Такого быть не должно, что то сломалось.')
+                # messages.error(request, 'Пожалуйста, обратитесь к администратору,если вы видите это сообщение через форму для обращения.')
+                #
+                # response = render(request, template_name='registration/auth_messages.html')
+                # return response
         else:
-            return render(request,template_name=self.template_name,context={'form': form, 'formset': formset, 'pointer': pointer})
+            return render(request, template_name=self.template_name,context={'form': form, 'formset': formset, 'pointer': pointer})
 
 
 class StartingPageView(BaseOrderView):
@@ -147,6 +143,26 @@ class LkHelloPageView(ActiveUserConfirmMixin,
     def get(self, request):
         return render(request, 'lk-pages/lk-hello-page.html')
 
+"""
+ user_ip = get_user_ip(request)
+                form_set_data = formset.cleaned_data
+                form_data = form.cleaned_data
+
+                data = {"country":form_data, 'items': form_set_data}
+                messages.success(request, 'для зарегистрированного')
+
+                web_user = WebUsers.objects.filter(web_username=customer.username).first()
+                order = Orders.objects.create(
+                    type='WEB_ORDER',
+                    body=data,
+                    user_ip=user_ip,
+                    web_user=web_user
+                )
+                return response
+"""
+
+
+
 class LkCreateOrderPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixin,View):
     def get(self, request):
         RegisterOrderItemFormSet = formset_factory(RegisterOrderItemForm, extra=1, max_num=10)
@@ -170,6 +186,25 @@ class LkCreateOrderPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixi
             'form': order_form,
             'formset': formset,
         })
+
+    def post(self, request):
+        form = OrderForm(request.POST)
+        formset = RegisterOrderItemFormSet(request.POST)
+
+        if form.is_valid() and formset.is_valid():
+            data = form.cleaned_data
+            form_set_data = formset.cleaned_data
+            user_ip = get_user_ip(request)
+            web_user = WebUsers.objects.filter(web_username=request.user.username).first()
+            order = Orders.objects.create(
+                type='WEB_ORDER',
+                body={"country": data, 'items': form_set_data},
+                user_ip=user_ip,
+                web_user=web_user
+            )
+            messages.success(request, f'Заявка №{order.id} успешно создана!')
+            return HttpResponseRedirect(reverse('auth_messages'))
+        return render(request, 'lk-pages/lk-create-order-page.html', {'form': form, 'formset': formset})
 
 class LkOrdersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
     def get(self, request):

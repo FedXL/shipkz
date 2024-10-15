@@ -1,11 +1,10 @@
 {% extends 'components/lk-base.html' %}
 {% block lk_content %}
-    <h2>ВАШИ ЗАКАЗЫ</h2>
+    <h2>Ваши заказы</h2>
 <style>
     .progress-item {
         width: 30px;
         height: 30px;
-
         margin-right: 5px;
     }
     .progress-full {
@@ -23,11 +22,17 @@
 .order-number-container {
     border-radius: 5px;
     margin-right: 10px;
+    padding: 5px;
+    font-size: 24px;
     background-color: transparent;
     border: var(--main-color) 3px solid;
     width: 80px;
     height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
 
 .order-container{
     display: flex;
@@ -45,6 +50,11 @@
     background-color: transparent;
     border: var(--main-color) 3px solid;
     margin-left: 10px;
+    flex-direction: column;
+    padding: 5px;
+}
+.order-info-window span{
+    display: flex;
 }
 .order-day-left {
     border-radius: 5px;
@@ -55,11 +65,7 @@
     margin-left: 5px;
     font-size: 24px;
 }
-@media screen and (max-width: 600px) {
-    .order-container{
-        flex-direction: column;
-    }
-}
+
 .order-container:hover{
     background-color: var(--dark-theme);
     color: white;
@@ -73,7 +79,6 @@
 <div class="order-container">
 <div class="order-number-container">
     {{order.id}}
-    {{order.order_status_info.shop|slice:":5"}}...
 </div>
 
 {% for step in order.order_status_info.progress_bar%}
@@ -85,14 +90,11 @@
 </div>
 {%endif%}
 {%endfor%}
-<div class="order-info-window">
-
-    <span>{{order.order_status_info.status_text}}</span>
-    <span>{{order.support_header_text}}</span>
-</div>
-    <div class="order-day-left" title="Дней в пути">
-        <span>{{order.days_in_way}}</span>
+    <div class="order-info-window">
+        <span>Откуда: {{order.order_status_info.shop|slice:":20"}} от {{order.start_time}}</span>
+        <span>Статус: {{order.order_status_info.status_text}}</span>
     </div>
+
 </div>
 </a>
 {% endfor %}
