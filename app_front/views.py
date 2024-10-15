@@ -143,24 +143,6 @@ class LkHelloPageView(ActiveUserConfirmMixin,
     def get(self, request):
         return render(request, 'lk-pages/lk-hello-page.html')
 
-"""
- user_ip = get_user_ip(request)
-                form_set_data = formset.cleaned_data
-                form_data = form.cleaned_data
-
-                data = {"country":form_data, 'items': form_set_data}
-                messages.success(request, 'для зарегистрированного')
-
-                web_user = WebUsers.objects.filter(web_username=customer.username).first()
-                order = Orders.objects.create(
-                    type='WEB_ORDER',
-                    body=data,
-                    user_ip=user_ip,
-                    web_user=web_user
-                )
-                return response
-"""
-
 
 
 class LkCreateOrderPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixin,View):
@@ -253,7 +235,9 @@ class LkProfilePageView(View):
             return redirect('lk-profile')
         return render(request, 'lk-pages/lk-profile-page.html', {'form': form})
 
-class LkMessagesPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixin, View):
+class LkMessagesPageView(ActiveUserConfirmMixin,
+                         EmailVerificationRequiredMixin,
+                         View):
     def get(self, request):
         user = request.user
         profile = get_object_or_404(Profile, user=user)

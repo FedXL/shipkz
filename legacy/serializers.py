@@ -1,6 +1,9 @@
+import ast
 import datetime
 import json
 from rest_framework import serializers
+
+from app_front.management.email.email_sender import my_logger
 from legacy.models import Orders, OrderStatusInfo
 
 status_attr_dict = {
@@ -29,19 +32,42 @@ class OrdersSerializerPre(serializers.ModelSerializer):
         return obj.time.strftime("%d %b %Y, %H:%M")
 
     def get_items(self, obj):
+        """
+        {'country': {'country': 'EUROPE'}, 'items': [{'goods_link': '2.ru', 'count': 2, 'comment': '33'}]}
+        """
+        try:
+            body_data = json.loads(obj.body)
+            items_data = body_data.get('items', {})
+        except json.JSONDecodeError:
+            my_logger.error(f"Ошибка декодирования строки JSON: {obj.body}")
 
-        body_data = json.loads(obj.body)
-        items_data = body_data.get('items', {})
+        try:
+            data_str = obj.body
+            data_dict = ast.literal_eval(data_str)
+            items_data = data_dict.get('items', {})
+        except ValueError as e:
+            my_logger.error(f"Ошибка преобразования строки: {e}")
+            raise ValueError(f"Ошибка преобразования строки: {e}")
 
-        # Формируем список с данными для каждого item
         items = []
-        for key, item in items_data.items():
-            items.append({
-                'item_position': key,
-                'item_link': item.get('url'),
-                'item_count': item.get('amount'),
-                'item_comment': item.get('comment')
-            })
+        if isinstance(items_data, list):
+            counter = 1
+            for item in items_data:
+                items.append({
+                    'item_position': counter,
+                    'item_link': item.get('url'),
+                    'item_count': item.get('amount'),
+                    'item_comment': item.get('comment')
+                })
+                counter +=1
+        else:
+            for key, item in items_data.items():
+                items.append({
+                    'item_position': key,
+                    'item_link': item.get('url'),
+                    'item_count': item.get('amount'),
+                    'item_comment': item.get('comment')
+                })
         return items
 
     def get_days_in_way(self, obj):
