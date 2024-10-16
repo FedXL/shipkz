@@ -31,11 +31,11 @@ def body_parser(form_set_data):
     """
 
     refactored_items = {}
-    count = 1
+    numer =1
     for item in form_set_data:
         url = item.get('goods_link')
         count = item.get('count')
         comment = item.get('comment')
-        refactored_items[count] = {'url': url, 'amount': count, 'comment': comment}
-        count += 1
+        refactored_items[numer] = {'url': url, 'amount': count, 'comment': comment}
+        numer += 1
     return refactored_items
