@@ -12,7 +12,18 @@ my_logger.setLevel(logging.DEBUG)
 my_logger.addHandler(logging.StreamHandler())
 my_logger.addHandler(logging.FileHandler('email_sender.log'))
 
-def send_order_notification_email(to_mail,order_number,form_data,username=None):
+def send_order_notification_email(to_mail,
+                                  order_number,
+                                  form_data,
+                                  username=None):
+    """
+
+    :param to_mail:
+    :param order_number:
+    :param form_data: country, url, price, comment, phone
+    :param username:
+    :return:
+    """
     my_logger.debug('Start send_order_notification_email')
 
     country = form_data.get('country')
@@ -39,8 +50,31 @@ def send_order_notification_email(to_mail,order_number,form_data,username=None):
         my_logger.error(f'Error in send_order_notification_email: {e}')
         return False
 
+def send_register_order_notification_email(to_mail,
+                                           username,
+                                           order_number,
+                                           country,
+                                           goods,):
+    data = generate_current_date()
+    my_logger.debug('Start send_register_order_notification_email')
+    header = f"Заказ №{order_number} SHIPKZ.RU от {data} года"
+    email_body = (f'<h2>Уважаемый {username}</h2>'
+                    f'<p>Ваш заказ №{order_number} принят в обработку!</p>'
+                    f'<p>Откуда {country}</p>'
+                    f'<p>Товары:</p>')
 
-
+    for number,item in goods.items():
+        url = item.get('url')
+        count = item.get('amount')
+        comment = item.get('comment')
+        email_body += (f'<p>Ссылка на товар: <a href="{url}"> {number}-ссылка</p>'
+                        f'<p>Количество товара: {count}</p>'
+                        f'<p>Комментарий к товару: {comment}</p>'
+                        f'<p>------------------------------------</p>')
+    email_body += "<br><br><br>"
+    email_body += (f'<p>Ожидайте, с вами обязательно свяжется менеджер.</p>')
+    send_email_result=send_email(header=header, body=email_body, to_mail=to_mail)
+    return send_email_result
 
 
 def send_email(header, body, to_mail):

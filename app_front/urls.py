@@ -2,7 +2,7 @@ from django.urls import path
 
 from app_front.views import StartingPageView, KazakhstanPageView, TradeinnPageView, AboutUsPageView, ContactsPageView, \
     TariffsPageView, LkHelloPageView, LkCreateOrderPageView, LkOrdersPageView, LkPreordersPageView, LkProfilePageView, \
-    LkMessagesPageView, LkLogoutPageView, testing_view, LkOrderPageView
+    LkMessagesPageView, LkLogoutPageView, testing_view, LkOrderPageView, LkPreordersDeletePageView
 
 urlpatterns = [
     path('', StartingPageView.as_view(), name='home'),
@@ -17,6 +17,7 @@ urlpatterns = [
     path('lk/orders/', LkOrdersPageView.as_view(), name='lk-orders'),
     path('lk/order/<int:order_id>',LkOrderPageView.as_view(), name='lk-order'),
     path('lk/preorders/', LkPreordersPageView.as_view(), name='lk-pre-orders'),
+    path('lk/delete_preorder/',LkPreordersDeletePageView.as_view(), name='lk-delete-preorder'),
     path('lk/profile/', LkProfilePageView.as_view(), name='lk-profile'),
     path('lk/messages/', LkMessagesPageView.as_view(), name='lk-messages'),
     path('lk/logout/', LkLogoutPageView.as_view(), name='lk-logout')

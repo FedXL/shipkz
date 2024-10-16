@@ -49,6 +49,7 @@ class MessagesAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
 
 class OrderStatusAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = [field.name for field in OrderStatus._meta.fields]
+    search_fields = ['order__id']
 
 class OrderStatusInfoAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = [field.name for field in OrderStatusInfo._meta.fields]

@@ -12,12 +12,13 @@ from app_auth.mixins import ActiveUserConfirmMixin
 from app_auth.mixins import EmailVerificationRequiredMixin
 from app_auth.models import Profile
 from app_front.forms import UnregisteredOrderForm, OrderForm, RegisterOrderItemForm, RegisterOrderItemFormSet
-from app_front.management.orders.orders_handler import get_orders_by_username_pre, get_orders_by_username_full
+from app_front.management.orders.orders_handler import get_orders_by_username_pre, get_orders_by_username_full, \
+    body_parser
 from app_front.management.unregister_authorization.token import check_token, handle_no_token_comeback_version
 from app_front.management.utils import get_user_ip
 from app_front.utils import generate_jwt_token
 from legacy.models import Exchange, WebUsers, Orders, WebUsersMeta
-from app_front.tasks import unregister_web_task_way
+from app_front.tasks import unregister_web_task_way, registered_web_task_way
 from legacy.serializers import OrderFullSerializer, OrdersSerializerPre
 
 
@@ -89,31 +90,26 @@ class BaseOrderView(View):
     def post(self, request):
         customer = request.user
         if customer.is_authenticated and customer.email_verified:
-
             pointer = 'registered'
             return redirect('lk-create-order')
         else:
             form = UnregisteredOrderForm(request.POST)
-            formset = None
             pointer = 'unregistered'
-        if form.is_valid() and  (formset is None or formset.is_valid()):
+        if form.is_valid():
             data = form.cleaned_data
             form_data = form.cleaned_data
             if pointer == 'unregistered':
                 messages.success(request, 'Ваша заявка успешно получена успешно получена')
+                messages.success(request, 'В ближайшее время с вами свяжется наш менеджер для уточнения деталей')
                 response,token,web_user,user_ip = auth_cookie_handler(request)
                 unregister_web_task_way.delay(data=form_data, web_user_id=web_user.user_id, user_ip=user_ip)
-
-
+                return response
             elif pointer =='registered':
-                redirect('lk-create-order')
-                # messages.error(request, 'Как вы сюда попали? Такого быть не должно, что то сломалось.')
-                # messages.error(request, 'Пожалуйста, обратитесь к администратору,если вы видите это сообщение через форму для обращения.')
-                #
-                # response = render(request, template_name='registration/auth_messages.html')
-                # return response
+                messages.error(request, 'Как вы сюда попали? Такого быть не должно, что то сломалось.')
+                messages.error(request, 'Пожалуйста, обратитесь к администратору')
+                redirect('auth_messages')
         else:
-            return render(request, template_name=self.template_name,context={'form': form, 'formset': formset, 'pointer': pointer})
+            return render(request, template_name=self.template_name,context={'form': form,'pointer': pointer})
 
 
 class StartingPageView(BaseOrderView):
@@ -145,9 +141,9 @@ class LkHelloPageView(ActiveUserConfirmMixin,
 
 
 
+
 class LkCreateOrderPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixin,View):
     def get(self, request):
-        RegisterOrderItemFormSet = formset_factory(RegisterOrderItemForm, extra=1, max_num=10)
         if request.method == 'POST':
             order_form = OrderForm(request.POST)
             formset = RegisterOrderItemFormSet(request.POST)
@@ -172,20 +168,24 @@ class LkCreateOrderPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixi
     def post(self, request):
         form = OrderForm(request.POST)
         formset = RegisterOrderItemFormSet(request.POST)
-
         if form.is_valid() and formset.is_valid():
             data = form.cleaned_data
             form_set_data = formset.cleaned_data
             user_ip = get_user_ip(request)
             web_user = WebUsers.objects.filter(web_username=request.user.username).first()
+            items_parser_data_for_legacy_bot_agrh = body_parser(form_set_data)
+            data['items'] = items_parser_data_for_legacy_bot_agrh
+            data = json.dumps(data)
             order = Orders.objects.create(
                 type='WEB_ORDER',
-                body={"country": data, 'items': form_set_data},
+                body=data,
                 user_ip=user_ip,
                 web_user=web_user
             )
+
             messages.success(request, f'Заявка №{order.id} успешно создана!')
-            return HttpResponseRedirect(reverse('auth_messages'))
+            registered_web_task_way.delay(order_id=order.id)
+            return HttpResponseRedirect(reverse('lk-pre-orders'))
         return render(request, 'lk-pages/lk-create-order-page.html', {'form': form, 'formset': formset})
 
 class LkOrdersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
@@ -193,9 +193,9 @@ class LkOrdersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, V
         data=get_orders_by_username_full(request.user.username)
         return render(request, 'lk-pages/lk-orders-page.html',context={'data':data})
 
+
 class LkOrderPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
     def get(self, request,order_id):
-
         user = request.user
         web_user = user.profile.web_user
         order = Orders.objects.filter(id=order_id,web_user=web_user).first()
@@ -204,13 +204,28 @@ class LkOrderPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, Vi
             data_details = OrdersSerializerPre(order).data
             return render(request, 'lk-pages/lk-order-page.html', context={'order': data,'data_details':data_details})
         messages.error(request, f'У вас нет доступа к данным этого заказа {order_id}.')
-        return HttpResponseRedirect(reverse('auth_messages'))
+        return HttpResponseRedirect(reverse('lk-pre-orders'))
 
 
 class LkPreordersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
     def get(self, request):
         data=get_orders_by_username_pre(request.user.username, pre=True)
         return render(request, 'lk-pages/lk-pre-orders-page.html',context={'data':data})
+
+
+
+class LkPreordersDeletePageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
+    def post(self,request):
+        order_id=request.POST.get('order_id')
+        user = request.user
+        order = Orders.objects.filter(id=order_id,web_user=user.profile.web_user).first()
+        if order:
+            order.delete()
+            messages.success(request, f'Заказ №{order_id} успешно удален.')
+            return HttpResponseRedirect(reverse('lk-pre-orders'))
+        messages.error(request, f'У вас нет доступа к данным этого заказа {order_id}.')
+        return HttpResponseRedirect(reverse('auth_messages'))
+
 
 
 class LkProfilePageView(View):

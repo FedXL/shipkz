@@ -1,0 +1,23 @@
+
+    .messages {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .messages li {
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 2px solid;
+        border-radius: 5px;
+    }
+
+    .error {
+        color: rgba(255, 0, 0, 0.55);
+        background-color: #fdd;
+    }
+
+    .success {
+        color: #0daaaf;
+        background-color: #dfd;
+    }

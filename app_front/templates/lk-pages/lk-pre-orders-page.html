@@ -79,15 +79,18 @@
 
 </style>
 <h2>Ваши заявки</h2>
-
+{% include 'components/messages.html' %}
 {% for order in data %}
+<form method="post" action="{% url 'lk-delete-preorder' %}">
+    {% csrf_token %}
+    <input type="hidden" name="order_id" value="{{ order.id }}">
     <div class="order-container">
         <div class="order-title">Заявка № {{ order.id }} от {{ order.date }}</div>
         <div class="order-items">
             {% for item in order.items %}
                     <div class="order-item" >
                         <div class="order-item-cont">
-                        <strong class="low-text-content">Ссылка:</strong>
+                            <strong class="low-text-content">Ссылка:</strong>
                         </div>
                         <div class="order-item-cont">
                             <a href="{{ item.item_link }}" target="_blank">{{ item.item_link|slice:":50" }}...</a>
@@ -95,7 +98,7 @@
                     </div>
                     <div class="order-item">
                         <div class="order-item-cont">
-                        <strong class="low-text-content">Количество:</strong>
+                            <strong class="low-text-content">Количество:</strong>
                         </div>
                         <div class="order-item-cont">
                             {{ item.item_count }}
@@ -103,21 +106,22 @@
                     </div>
                     <div class="order-item">
                         <div class="order-item-cont">
-                        <strong class="low-text-content">Комментарий:</strong>
+                            <strong class="low-text-content">Комментарий:</strong>
                         </div>
                         <div class="order-item-cont">
                             <span class="comment-truncated">
-                        {% if item.item_comment %}
-                        {{ item.item_comment }}
-                        {% else %}
-                        Нет комментария
-                        {% endif %}
+                                {% if item.item_comment %}
+                                {{ item.item_comment }}
+                                {% else %}
+                                    Нет комментария
+                                {% endif %}
                             </span>
                         </div>
-                        </div>
-            <button class="delete"> Удалить </button>
+                    </div>
             {% endfor %}
+            <button type="submit" class="delete"> Удалить </button>
         </div>
     </div>
+</form>
 {% endfor %}
 {% endblock %}
