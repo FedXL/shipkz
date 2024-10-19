@@ -40,7 +40,6 @@ MIGRATION_MODULES = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -129,8 +128,6 @@ MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 STATIC_ROOT =  '/var/www/static'
 MEDIA_ROOT = '/var/www/media'
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-# settings.py
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 AUTHENTICATION_BACKENDS = (
@@ -149,3 +146,4 @@ CELERY_TIMEZONE = 'UTC'
 KAZAKHSTAN_CATCH_CHAT = os.getenv('KAZAKHSTAN_CATCH_CHAT')
 TRADEINN_CATCH_CHAT = os.getenv('TRADEINN_CATCH_CHAT')
 ORDERS_CATCH_CHAT = os.getenv('ORDERS_CATCH_CHAT')
+REPAIR_PASSWORD_SECRET = os.getenv('REPAIR_PASSWORD_SECRET')

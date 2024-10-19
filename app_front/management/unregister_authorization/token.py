@@ -11,7 +11,7 @@ load_dotenv()
 sharable_secret=settings.SHARABLE_SECRET
 def create_token(username: str,
                  ip: str,
-                    user_id: str,
+                 user_id: str,
                  secret: str = sharable_secret,
                  timedelta: datetime.timedelta = datetime.timedelta(days=14),
                  ):
@@ -26,6 +26,8 @@ def create_token(username: str,
                        key=secret,
                        algorithm='HS256')
     return token
+
+
 
 
 def create_access_token(username: str, secret=sharable_secret, user_id=0):

@@ -18,7 +18,8 @@
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
-    margin: 10px;
+    margin: 5px;
+    padding: 20px;
 }
 
 .one-box-container h3 {

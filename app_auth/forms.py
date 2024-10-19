@@ -43,3 +43,20 @@ class ProfileModelForm(forms.ModelForm):
             'telegram_id': 'Telegram ID'
         }
 
+
+class RecoveryPasswordForm(forms.Form):
+    email = forms.EmailField(label="Почта вашей учетной записи:", required=True)
+    token = forms.CharField(widget=forms.HiddenInput(), required=False)  # Скрытое поле для токена
+
+class RecoveryPasswordFormChangePasswordForm(forms.Form):
+    password = forms.CharField(widget=forms.PasswordInput, label="Пароль", required=True)
+    password_confirm = forms.CharField(widget=forms.PasswordInput, label="Подтверждение пароля", required=True)
+    token = forms.CharField(widget=forms.HiddenInput(), required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password_confirm = cleaned_data.get('password_confirm')
+        if password and password_confirm and password != password_confirm:
+            raise forms.ValidationError('Пароли не совпадают')
+        return cleaned_data

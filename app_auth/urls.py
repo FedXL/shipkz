@@ -1,6 +1,7 @@
 from django.urls import path
 from app_auth.views import SignUpView, LoginView, LogoutCustomView, AllertsView, ConfirmEmailMessageView, \
-    UniqueUserNameApiView, UnregRegistrationApiView, ConfirmEmailPointView,  warning_messages_view
+    UniqueUserNameApiView, UnregRegistrationApiView, ConfirmEmailPointView, warning_messages_view, RecoveryPasswordView, \
+    ConfirmRecoveryPasswordView
 
 urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
@@ -12,5 +13,7 @@ urlpatterns = [
     path('allert/', AllertsView.as_view(), name='allert'),
     path('unique_username/', UniqueUserNameApiView.as_view(), name='check_for_unique_username'),
     path('unreg_auth_token/', UnregRegistrationApiView.as_view(), name='api-unreg-auth'),
+    path('repair_password/', RecoveryPasswordView.as_view(), name='repair_password'),
+    path('confirm_repair_password/', ConfirmRecoveryPasswordView.as_view(), name='repair_password_message'),
 
 ]

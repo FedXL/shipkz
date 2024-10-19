@@ -15,3 +15,12 @@ def send_verification_email(to_mail,user, token):
                   
                   f'<p>Если вы не запрашивали эту проверку, пожалуйста, проигнорируйте это письмо.</p>')
     send_email(header="ShipKZ активация учётной записи",body= email_body,to_mail=to_mail)
+
+def send_repair_password_email(to_mail,token):
+    url  = reverse('repair_password_message')
+    url_host = settings.BASE_URL_HOST
+    verification_link = f"{url_host}{url}?token={token}"
+    email_body = (f'<p>Для восстановления пароля перейдите по ссылке:</p>'
+                  f'<a href="{verification_link}">Восстановить пароль</a>'
+                  f'<p>Если вы не запрашивали восстановление пароля, пожалуйста, проигнорируйте это письмо.</p>')
+    send_email(header="ShipKZ восстановление пароля",body= email_body,to_mail=to_mail)

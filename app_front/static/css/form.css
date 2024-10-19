@@ -167,3 +167,10 @@
     text-align: left;
     margin-bottom: 6px;
 }
+.register-link{
+    display: flex;
+    flex-direction: column;
+}
+.register-link div{
+    margin-top: 5px;
+}

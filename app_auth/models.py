@@ -6,6 +6,7 @@ from legacy.models import Users , WebUsers
 class CustomUser(AbstractUser):
     email_verified = models.BooleanField(default=False)
     verification_token = models.UUIDField(default=uuid.uuid4, editable=False,null=True)
+    repair_verification_token = models.TextField(editable=False,null=True, blank=True)
 
 
 class Profile(models.Model):

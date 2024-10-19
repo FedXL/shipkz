@@ -31,6 +31,7 @@ def create_unregister_web_order(data,web_user_id,user_ip) ->Tuple[Orders,WebUser
         defaults={'value': email}
     )
 
+
     user_phone, created_phone = WebUsersMeta.objects.update_or_create(
         web_user=web_user,
         field='phone',
@@ -86,7 +87,7 @@ def registered_web_task_way(order_id):
                                            goods=data.get('items'))
     text = ""
     text += f"#{order.id} \n"
-    text += f"Type: Web Register Order"
+    text += f"Type: Web Order (reg)\n"
     text += f"User: {web_user.web_username}"
     text += "\n"
     goods = data.get('items')

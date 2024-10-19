@@ -21,8 +21,11 @@
         {% endif %}
         <button type="submit" class="submit-button">Вход</button>
         <div class="register-link">
-        Нет учетной записи? <a href="{% url 'signup' %}" class="mark-main-color">Регистрация</a>
-    </div>
+            <div>Нет учетной записи?</div>
+            <div><a href="{% url 'signup' %}" class="mark-main-color">Регистрация</a></div>
+            <div>Забыли пароль?</div>
+            <div><a href="{% url 'repair_password' %}" class="mark-main-color">Восстановление</a></div>
+        </div>
     </form>
 
 </div>

@@ -1,3 +1,7 @@
+import datetime
+from os import getenv
+
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import  AuthenticationForm
@@ -12,12 +16,13 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.exceptions import ObjectDoesNotExist
-from app_auth.forms import RegistrationForm
+from app_auth.forms import RegistrationForm, RecoveryPasswordForm, RecoveryPasswordFormChangePasswordForm
 from app_auth.models import CustomUser, Profile
 from app_auth.serializers import UnregRegistrationSerializer
-from app_front.management.unregister_authorization.token import handle_token, token_handler
+from app_front.management.unregister_authorization.token import handle_token, token_handler, create_token, check_token
+from app_front.management.utils import get_user_ip
 from legacy.models import WebUsers
-from app_auth.tasks import  send_verification_email_task
+from app_auth.tasks import send_verification_email_task, send_repair_password_email_task
 
 
 class LoginView(FormView):
@@ -131,3 +136,99 @@ class UnregRegistrationApiView(APIView):
             token = token_handler(user_ip=ip, token=token)
             return Response({'token': token}, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid data','messages':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RecoveryPasswordView(View):
+    def get(self, request):
+        form = RecoveryPasswordForm()
+        return render(request, 'registration/recovery_password_first_step.html',context={'form': form})
+
+    def post(self, request):
+        form = RecoveryPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            profile = Profile.objects.filter(email=email).first()
+            if not profile:
+                messages.success(request, f'Письмо для восстановления пароля отправлено на {email}.')
+                messages.success(request, 'Если вы не получили письмо, проверьте правильность введенного адреса электронной почты.')
+                return HttpResponseRedirect(reverse('auth_messages'))
+            else:
+                ip = get_user_ip(request)
+                user = profile.user
+                token  = create_token(username=user.username,
+                                      user_id=user.id,
+                                      timedelta=datetime.timedelta(hours=12),
+                                      ip=ip, secret=settings.REPAIR_PASSWORD_SECRET)
+
+                user.repair_verification_token = token
+                user.save()
+                messages.success(request, f'Письмо для восстановления пароля отправлено на {email}.')
+                send_repair_password_email_task.delay(to_mail=user.email, token=user.repair_verification_token)
+                return HttpResponseRedirect(reverse('auth_messages'))
+        return render(request, 'registration/recovery_password_first_step.html', {'form': form})
+
+
+class ConfirmRecoveryPasswordView(View):
+    def get(self, request):
+        token = request.GET.get('token')
+        if not token:
+            messages.error(request, 'A токен, токен то где?')
+            return render(request, 'registration/auth_messages.html')
+        token_dict, comment = check_token(token, secret=settings.REPAIR_PASSWORD_SECRET, is_comment=True)
+        if not token_dict:
+            messages.error(request, f'Что то пошло не так, пишите в администрацию если эта ошибка повторится')
+            messages.error(request, 'токен странный')
+            messages.error(request, comment)
+            return render(request, 'registration/auth_messages.html')
+        user = CustomUser.objects.filter(repair_verification_token=token).first()
+        if not user:
+            messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
+            messages.error(request, 'Пользователь не найден')
+            return render(request, 'registration/auth_messages.html')
+        token_user_id = token_dict.get('user_id')
+        if token_user_id != user.id:
+            messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
+            messages.error(request, 'Айди равенство')
+            return render(request, 'registration/auth_messages.html')
+        user_ip = get_user_ip(request)
+        if token_dict.get('ip') != user_ip:
+            messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
+            messages.error(request, 'IP равенство')
+            return render(request, 'registration/auth_messages.html')
+        form = RecoveryPasswordFormChangePasswordForm(initial={'token': token})
+
+        return render(request, 'registration/recovery_password_second_step.html', context={'form': form})
+
+
+    def post (self,request):
+        form = RecoveryPasswordFormChangePasswordForm(request.POST)
+        if form.is_valid():
+            token = form.cleaned_data.get('token')
+            if not token:
+                messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
+                return render(request, 'registration/auth_messages.html')
+            password = form.cleaned_data.get('password')
+            user = CustomUser.objects.filter(repair_verification_token=token).first()
+            if not user:
+                messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
+                return render(request, 'registration/auth_messages.html')
+            token_dict = check_token(token, secret=settings.REPAIR_PASSWORD_SECRET)
+            if not token_dict:
+                messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
+                return render(request, 'registration/auth_messages.html')
+            user_id = token_dict.get('user_id')
+            if user_id != user.id:
+                messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
+                return render(request, 'registration/auth_messages.html')
+            if token_dict.get('ip') != get_user_ip(request):
+                messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
+                return render(request, 'registration/auth_messages.html')
+
+            user.set_password(password)
+            user.repair_verification_token = None
+            user.save()
+            messages.success(request, 'Пароль успешно изменен')
+            return render(request, 'registration/auth_messages.html')
+        else:
+            messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
+            return render(request, 'registration/recovery_password_second_step.html', {'form': form})

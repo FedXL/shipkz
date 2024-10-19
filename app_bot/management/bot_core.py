@@ -60,7 +60,8 @@ sync_bot = TelegramBot(bot_token)
 
 
 def web_open_meeting_message_in_bot(web_user:WebUsers):
-    """WEB создает текст сообщения,
+    """
+    WEB создает текст сообщения,
     вытаскивает, старый номер сообщения
     пытается его удалить
     отсылает новое сообщение
@@ -78,7 +79,7 @@ def web_open_meeting_message_in_bot(web_user:WebUsers):
             bot_logger.error(f'cant to delete message {e}')
     message =  sync_bot.send_message(chat_id=chat_id, text=text_to_send,reply_markup=get_keyboard_message_start())
     if message:
-        web_user.last_message_telegramm_id=message.message_id
+        web_user.last_message_telegramm_id = message.message_id
         web_user.save()
         bot_logger.info(f'new message sent {message}')
 
