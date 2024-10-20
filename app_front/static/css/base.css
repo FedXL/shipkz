@@ -1,9 +1,6 @@
 html {
     font-size: 18px;
 }
-
-
-
 header {
     grid-row: 1 / 2;
     background-color: var(--main-color);
@@ -17,34 +14,82 @@ header {
     position: relative;
     width: 100%;
     background-color: white;
-
 }
 
-.image-container img {
-     /* Задает ширину картинки 100% от ширины контейнера */
+
+.image-background  {
     position: absolute; /* Позволяет позиционировать картинку */
     top: 50%; /* Центрирует картинку по вертикали */
     left: 50%; /* Центрирует картинку по горизонтали */
     transform: translate(-50%, -54%) scale(0.75); /* Центрирует картинку в контейнере */
     transition: transform 0.2s; /* Плавный переход для эффекта */
 }
+.logo-tele-icon {
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    top: 50%; /* Позиционирование по центру вертикально */
+    left: 50%; /* Позиционирование по центру горизонтально */
+    transform: translate(-50%, -50%) translate(-280px, 0); /* Центрируем и сдвигаем от центра */
+    z-index: 10; /* Устанавливаем z-index для слоя */
+    transition:transform 0.2s;
+}
+.logo-tele-icon:hover {
+    border: var(--dark-theme) 5px solid;
+    border-radius: 50%;/* Добавляем рамку */
+
+}
+
 
 .short-menu,
 .long-menu {
-    width: 100%;
     margin: 0;
     padding: 0;
     flex-wrap: wrap;
 }
 
 
+@media (min-width: 600px) {
+    .image-container {
+        display: flex;
+    }
+}
+
+@media (max-width: 599px) {
+    .image-container {
+        display: none;
+    }
+}
+
+nav {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.long-menu{
+    margin-left: auto;
+    margin-right: auto;
+}
+.short-menu{
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+
+
+
 @media (max-width: 425px) {
     .long-menu {
         display: none;
         flex-direction: column;
+        margin-left:10px;
+
     }
+
     .short-menu {
         display: flex;
+        flex-direction: row;
     }
 
 }
@@ -55,6 +100,7 @@ header {
         display: flex;
         flex-direction: row;
     }
+
     .short-menu {
         display: none;
     }
@@ -66,9 +112,7 @@ header {
     border: none;
     cursor: pointer;
 }
-.spacer {
-    flex-grow: 1;
-}
+
 
 .menu-item a {
     display: block;
@@ -79,6 +123,18 @@ header {
     height: 100%;
     white-space: nowrap;
 }
+
+.enter-item a {
+    background-color: #fec502;
+    color : #262525;
+
+}
+.enter-item a:hover {
+    background-color: var(--dark-theme);
+    color: white;
+}
+
+
 .menu-item {
     transition: background-color 0.4s ease; /* Adds a 0.5 second transition effect */
 }
@@ -114,3 +170,5 @@ footer {
     margin-top:20px;
     margin-bottom:20px;
 }
+
+

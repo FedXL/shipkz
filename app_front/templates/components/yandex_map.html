@@ -1,20 +1,17 @@
 {% load static %}
 <style>
-  #map-container {
+#map-container {
     position: relative;
-    display: flex;
-    width: 50%;
-    margin-left: auto;
-    margin-right: auto;
-    min-width: 300px;
+    width: 100%;
     height: 400px;
+    overflow: hidden;
 }
 
 #map-image {
-    display: flex;
+     /* Изображение займет всю ширину контейнера */
     cursor: pointer;
-    width: 100%;
-    object-fit: contain;
+    object-fit: cover; /* Изображение заполняет контейнер и обрезается */
+    object-position: center;
 }
 
 #map-container iframe {
@@ -24,8 +21,6 @@
     width: 100%;
     height: 100%;
 }
-
-
 
 </style>
 
