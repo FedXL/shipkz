@@ -9,7 +9,7 @@ header {
 }
 
 .image-container {
-    height: 350px; /* Фиксированная высота контейнера */
+    height: 425px; /* Фиксированная высота контейнера */
     overflow: hidden; /* Скрывает часть картинки, выходящую за пределы контейнера */
     position: relative;
     width: 100%;
@@ -24,21 +24,8 @@ header {
     transform: translate(-50%, -54%) scale(0.75); /* Центрирует картинку в контейнере */
     transition: transform 0.2s; /* Плавный переход для эффекта */
 }
-.logo-tele-icon {
-    width: 70px;
-    height: 70px;
-    position: absolute;
-    top: 50%; /* Позиционирование по центру вертикально */
-    left: 50%; /* Позиционирование по центру горизонтально */
-    transform: translate(-50%, -50%) translate(-280px, 0); /* Центрируем и сдвигаем от центра */
-    z-index: 10; /* Устанавливаем z-index для слоя */
-    transition:transform 0.2s;
-}
-.logo-tele-icon:hover {
-    border: var(--dark-theme) 5px solid;
-    border-radius: 50%;/* Добавляем рамку */
 
-}
+
 
 
 .short-menu,
@@ -61,16 +48,25 @@ header {
     }
 }
 
-nav {
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-}
-
-.long-menu{
+nav {max-width: 1300px;
     margin-left: auto;
     margin-right: auto;
+    padding-left: 40px;
+    padding-right: 40px;
+    display: flex;
+
+    flex-direction: column;
 }
+@media (max-width: 1300px) {
+    nav {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
+
+
+
+
 .short-menu{
     justify-content: space-between;
     flex-grow: 1;
@@ -86,6 +82,9 @@ nav {
         margin-left:10px;
 
     }
+    .lm-marker {
+        display: none !important;
+    }
 
     .short-menu {
         display: flex;
@@ -100,11 +99,12 @@ nav {
         display: flex;
         flex-direction: row;
     }
-
+    .lm-marker {
+        display: flex;
+    }
     .short-menu {
         display: none;
     }
-
 }
 
 .short-menu button{
@@ -142,6 +142,11 @@ nav {
     background-color: var(--dark-theme);
 }
 
+    .logo-menu-item {
+    margin-left: auto;
+}
+
+
 main {
     grid-row: 2 / 3;
     padding: 8px;
@@ -169,6 +174,20 @@ footer {
 .content-block{
     margin-top:20px;
     margin-bottom:20px;
+}
+
+.logo-tele-icon {
+
+    width: 22px;
+    height: 22px;
+    padding: 0;
+
+}
+.logo-tele-icon a {
+    padding: 0;
+    margin:0;
+    display: flex;
+    flex-direction: row;
 }
 
 

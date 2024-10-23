@@ -27,13 +27,10 @@ def create_token(username: str,
                        algorithm='HS256')
     return token
 
-
-
-
-def create_access_token(username: str, secret=sharable_secret, user_id=0):
+def create_access_token(username: str, secret=sharable_secret, user_id=0,delta_in_sec=30):
     """access token"""
     current_time = datetime.datetime.now()
-    expiried_time = current_time + datetime.timedelta(seconds=30)
+    expiried_time = current_time + datetime.timedelta(seconds=delta_in_sec)
     token_data = {
         'username': username,
         'user_id': user_id,

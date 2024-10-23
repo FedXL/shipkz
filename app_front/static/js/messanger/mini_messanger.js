@@ -1,6 +1,4 @@
-const ApiUrl = 'https://supportstation.kz/api/webhook/';
 const socketUrl = "wss://supportstation.kz/ws/";
-// const UserName = exportUser;
 
 const createSquareCounter = (count,idName) => {
     let messagesCounter = document.createElement('div');

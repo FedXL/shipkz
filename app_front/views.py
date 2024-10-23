@@ -13,9 +13,10 @@ from app_auth.models import Profile
 from app_front.forms import UnregisteredOrderForm, OrderForm, RegisterOrderItemForm, RegisterOrderItemFormSet
 from app_front.management.orders.orders_handler import get_orders_by_username_pre, get_orders_by_username_full, \
     body_parser
-from app_front.management.unregister_authorization.token import check_token, handle_no_token_comeback_version
+from app_front.management.unregister_authorization.token import check_token, handle_no_token_comeback_version, \
+    create_access_token
 from app_front.management.utils import get_user_ip
-from app_front.utils import generate_jwt_token
+
 from legacy.models import Exchange, WebUsers, Orders, WebUsersMeta
 from app_front.tasks import unregister_web_task_way, registered_web_task_way
 from legacy.serializers import OrderFullSerializer, OrdersSerializerPre
@@ -258,7 +259,7 @@ class LkMessagesPageView(ActiveUserConfirmMixin,
         web_user = WebUsers.objects.filter(web_username=user.username).first()
         username = web_user.web_username
         user_id = web_user.user_id
-        token=generate_jwt_token(user_id, username)
+        token = create_access_token(user_id=user_id, username=username, secret=settings.SHARABLE_SECRET, delta_in_sec=20)
         return render(request,
                       template_name='lk-pages/lk-messages-page.html',
                       context={'token': token})

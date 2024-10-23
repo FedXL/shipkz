@@ -2,11 +2,8 @@ import json
 from typing import Tuple
 from celery import shared_task
 from django.conf import settings
-from telebot.apihelper import send_game
-
 from app_auth.models import Profile
 from app_bot.management.bot_core import sync_bot, web_open_meeting_message_in_bot
-from app_bot.management.bot_text_utils import create_web_message_text
 from app_front.management.email.email_sender import send_email, send_order_notification_email, \
     send_register_order_notification_email
 from legacy.models import WebUsersMeta, Orders, WebUsers, WebMessages
@@ -21,23 +18,17 @@ def create_unregister_web_order(data,web_user_id,user_ip) ->Tuple[Orders,WebUser
     comment = data.get('comment')
     email = data.get('email')
     phone = data.get('phone')
-
-
-
     web_user = WebUsers.objects.get(user_id=web_user_id)
     user_email, created_email = WebUsersMeta.objects.update_or_create(
         web_user=web_user,
         field='email',
         defaults={'value': email}
     )
-
-
     user_phone, created_phone = WebUsersMeta.objects.update_or_create(
         web_user=web_user,
         field='phone',
         defaults={'value': phone}
     )
-
     order = Orders.objects.create(
         type='WEB_ORDER',
         body=json.dumps(data),
@@ -55,10 +46,10 @@ def unregister_web_task_way(data:dict,
     order, web_user = create_unregister_web_order(data, web_user_id, user_ip)
     message_body = f"/order_{order.id}"
     web_message = WebMessages.objects.create(message_body=message_body,
-                                            user=web_user,
-                                            is_answer=False,
-                                            message_type='order',
-                                             is_read=True)
+                                                user=web_user,
+                                                is_answer=False,
+                                                message_type='order',
+                                                is_read=True)
     send_order_notification_email(to_mail=email, form_data=data, order_number=order.id)
     text = "Незарегистрированный пользователь\n"
     text += web_user.web_username
