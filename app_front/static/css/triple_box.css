@@ -47,3 +47,10 @@
     height: 40px;
     align-self: center;
 }
+.triple-title{
+    font-weight: bold;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 21px;
+    color:#444444;
+}

@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="{% static 'css/text_insert.css' %}">
     <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap">
     {% block style_css %}
     {% endblock %}
 <style>
@@ -21,10 +20,10 @@
 body {
     font-family: 'El Messiri', sans-serif;
 }
-h2 {
-    font-family: 'Great Vibes', cursive;
-
+.custom-placeholder{
+    font-family: 'El Messiri', sans-serif;
 }
+
 
 ::selection {
     background-color:var(--main-color);
@@ -32,11 +31,9 @@ h2 {
 }
 
 </style>
-
 </head>
 <body>
    <header>
-
         <nav>
             <div class="short-menu">
                     <strong style="font-size:20px;color:white;margin-top:auto;margin-bottom: auto;">ShipKZ</strong>

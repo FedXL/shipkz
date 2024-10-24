@@ -115,13 +115,15 @@ nav {max-width: 1300px;
 
 
 .menu-item a {
-    display: block;
     padding: 12px;
+    display: flex;
     color: white;
     text-decoration: none;
     font-size: 18px;
     height: 100%;
     white-space: nowrap;
+    align-items: center; /* Vertically centers the text */
+    justify-content: center;
 }
 
 .enter-item a {
@@ -142,7 +144,7 @@ nav {max-width: 1300px;
     background-color: var(--dark-theme);
 }
 
-    .logo-menu-item {
+.logo-menu-item {
     margin-left: auto;
 }
 
@@ -181,6 +183,7 @@ footer {
     width: 22px;
     height: 22px;
     padding: 0;
+    margin-right: 8px;
 
 }
 .logo-tele-icon a {

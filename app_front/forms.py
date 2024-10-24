@@ -12,7 +12,7 @@ class OrderForm(forms.Form):
             ('OTHER', 'Другое'),
         ],
         widget=forms.RadioSelect,
-        initial='EUROPE'  # Значение по умолчанию
+        initial='EUROPE'
     )
 
 
@@ -21,35 +21,41 @@ class UnregisteredOrderForm(OrderForm):
         label='Ссылка на товар:',
         max_length=100,
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Например: https://www.amazon.com/'})
+        widget=forms.TextInput(attrs={'placeholder': 'Например: https://www.amazon.com/',
+                                      'class': 'custom-placeholder'})
     )
     price = forms.CharField(
         label='Стоимость товара:',
         max_length=100,
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Например: 100 Долларов'})
+        widget=forms.TextInput(attrs={'placeholder': 'Например: 100 Долларов',
+                                      'class': 'custom-placeholder'})
     )
     count = forms.IntegerField(
         label='Количество товара:',
         required=True,
-        widget=forms.NumberInput(attrs={'placeholder': 'Например: 5 штук'})
+        widget=forms.NumberInput(attrs={'placeholder': 'Например: 5 штук',
+                                        'class': 'custom-placeholder'})
     )
     comment = forms.CharField(
         label='Комментарий к заказу:',
         required=False,
         widget=forms.Textarea(attrs={'placeholder': 'Любая информация которая вам покажется важной. Например: размер или цвет',
-                                     'rows': 3,'cols': 25})
+                                     'rows': 3,'cols': 25,
+                                     'class': 'custom-placeholder'})
     )
     email = forms.EmailField(
         label='Email:',
         required=True,
-        widget=forms.EmailInput(attrs={'placeholder': 'Введите ваш email'})
+        widget=forms.EmailInput(attrs={'placeholder': 'Введите ваш email',
+                                       'class': 'custom-placeholder'})
     )
     phone = forms.CharField(
         label='Телефон:',
         max_length=100,
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Введите ваш телефон'})
+        widget=forms.TextInput(attrs={'placeholder': 'Введите ваш телефон',
+                                      'class': 'custom-placeholder'})
     )
 
 class RegisterOrderItemForm(forms.Form):
@@ -57,18 +63,21 @@ class RegisterOrderItemForm(forms.Form):
         label='Ссылка на товар:',
         max_length=100,
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Например: https://www.amazon.com/'})
+        widget=forms.TextInput(attrs={'placeholder': 'Например: https://www.amazon.com/',
+                                      'class': 'custom-placeholder'})
     )
     count = forms.IntegerField(
         label='Количество товара:',
         required=True,
-        widget=forms.NumberInput(attrs={'placeholder': 'Например: 5 штук'})
+        widget=forms.NumberInput(attrs={'placeholder': 'Например: 5 штук',
+                                        'class': 'custom-placeholder'})
     )
     comment = forms.CharField(
         label='Комментарий к товару:',
         required=False,
         widget=forms.TextInput(attrs={'placeholder':  'Например: размер или цвет',
-                                     'rows': 1})
+                                     'rows': 1,
+                                      'class': 'custom-placeholder'})
     )
 
 RegisterOrderItemFormSet = formset_factory(RegisterOrderItemForm, extra=1, max_num=10)
