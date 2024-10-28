@@ -32,8 +32,10 @@ services:
       - postgres_data:/var/lib/postgresql/data
     expose:
       - "5432"
+#    ports:
+#      - "5432:5432"
     environment:
-      POSTGRES_DB: ${POSTGRES_NAME}
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   nginx:
@@ -69,7 +71,6 @@ services:
     depends_on:
       - redis
       - gunicorn
-
 volumes:
   static_volume:
   media_volume:

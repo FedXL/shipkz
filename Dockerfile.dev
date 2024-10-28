@@ -1,3 +1,7 @@
 FROM postgres:16-alpine
 
-COPY dump33 /docker-entrypoint-initdb.d/
+# Create the 'dumps' directory
+RUN mkdir /dumps
+
+# Copy files from the 'dump' directory on the host to '/dumps' in the container
+COPY dump /dumps/

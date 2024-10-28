@@ -365,6 +365,7 @@ const updateSquareCounter2 = (count) => {
 
             const initWssConnection = (token, url) => {
                 console.log('start init wss connection');
+                checkTokenUnregisterUser();
                 const ws = new WebSocket(url);
                 ws.onopen = function () {
                     let data = {

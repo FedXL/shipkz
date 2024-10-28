@@ -11,7 +11,7 @@ class CustomUser(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, unique=True, related_name='profile')
-    phone = models.CharField(max_length=15, blank=True, null=True)
+    phone = models.CharField(max_length=50, blank=True, null=True)
     address = models.CharField(max_length=255,blank=True, null=True)
     telegram_id = models.BigIntegerField(blank=True, null=True)
     first_name = models.CharField(max_length=100,blank=True, null=True)

@@ -13,7 +13,6 @@ class Buyers(models.Model):
         managed = False
         db_table = 'buyers'
 
-
 class Discounts(models.Model):
     is_vip = models.BooleanField(blank=True, null=True)
     user = models.OneToOneField('Users', models.DO_NOTHING, blank=True, null=True)
@@ -231,7 +230,7 @@ class WebDocs(models.Model):
 
 class WebUsers(models.Model):
     user_id = models.AutoField(primary_key=True)
-    user_name = models.CharField(max_length=255, blank=True, null=True)
+    user_name = models.CharField(max_length=255, blank=True, null=True) # FIXME: не используется надо бы удалить
 
     web_username = models.CharField(unique=True, max_length=255, blank=True, null=True)
     is_kazakhstan = models.BooleanField(blank=True, null=True, default=True)

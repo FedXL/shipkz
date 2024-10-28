@@ -1,6 +1,5 @@
 import datetime
 from os import getenv
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -113,13 +112,10 @@ class UniqueUserNameApiView(APIView):
             return Response({'ok':False,'message':'name exist'}, status=status.HTTP_200_OK)
         return Response({'ok':True,'name':'available'}, status=status.HTTP_200_OK)
 
-
-
 class AllertsView(View):
     def get(self, request):
         logout(request)
         return HttpResponseRedirect(reverse('home'))
-
 
 class UnregRegistrationApiView(APIView):
     serializer = UnregRegistrationSerializer
@@ -167,36 +163,42 @@ class RecoveryPasswordView(View):
                 return HttpResponseRedirect(reverse('auth_messages'))
         return render(request, 'registration/recovery_password_first_step.html', {'form': form})
 
-
 class ConfirmRecoveryPasswordView(View):
+    """flow if password was lost"""
+
     def get(self, request):
         token = request.GET.get('token')
+
         if not token:
-            messages.error(request, 'A токен, токен то где?')
+            messages.error(request, 'A токен, токен то где? Без токена не получится.')
             return render(request, 'registration/auth_messages.html')
         token_dict, comment = check_token(token, secret=settings.REPAIR_PASSWORD_SECRET, is_comment=True)
+
         if not token_dict:
             messages.error(request, f'Что то пошло не так, пишите в администрацию если эта ошибка повторится')
             messages.error(request, 'токен странный')
             messages.error(request, comment)
             return render(request, 'registration/auth_messages.html')
+
         user = CustomUser.objects.filter(repair_verification_token=token).first()
+
         if not user:
             messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
             messages.error(request, 'Пользователь не найден')
             return render(request, 'registration/auth_messages.html')
         token_user_id = token_dict.get('user_id')
+
         if token_user_id != user.id:
             messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
             messages.error(request, 'Айди равенство')
             return render(request, 'registration/auth_messages.html')
         user_ip = get_user_ip(request)
+
         if token_dict.get('ip') != user_ip:
             messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
             messages.error(request, 'IP равенство')
             return render(request, 'registration/auth_messages.html')
         form = RecoveryPasswordFormChangePasswordForm(initial={'token': token})
-
         return render(request, 'registration/recovery_password_second_step.html', context={'form': form})
 
 

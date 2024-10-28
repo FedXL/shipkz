@@ -120,12 +120,12 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# FORCE_SCRIPT_NAME = '/shipkz'
-# APPEND_SLASH = True
-# MEDIA_URL = '/shipkz/media/'
-# STATIC_URL = '/shipkz/static/'
-MEDIA_URL = '/media/'
-STATIC_URL = '/static/'
+FORCE_SCRIPT_NAME = '/shipkz'
+APPEND_SLASH = True
+MEDIA_URL = '/shipkz/media/'
+STATIC_URL = '/shipkz/static/'
+# MEDIA_URL = '/media/'
+# STATIC_URL = '/static/'
 STATIC_ROOT =  '/var/www/static'
 MEDIA_ROOT = '/var/www/media'
 

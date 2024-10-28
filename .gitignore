@@ -25,7 +25,7 @@ coverage.xml
 celerybeat-schedule
 instance/
 .webassets-cache
-
+deploy.yml
 .idea/
 .vscode/
 *.swp
