@@ -60,3 +60,11 @@ class RecoveryPasswordFormChangePasswordForm(forms.Form):
         if password and password_confirm and password != password_confirm:
             raise forms.ValidationError('Пароли не совпадают')
         return cleaned_data
+
+
+
+class CallbackResponseForm(forms.Form):
+    email = forms.EmailField(label="Почта", required=True)
+    connect = forms.CharField(label="Укажите предпочтительный способ связи", required=False)
+    name = forms.CharField(label="Имя", required=False)
+    message = forms.CharField(label="Что случилось?", widget=forms.Textarea, required=True)

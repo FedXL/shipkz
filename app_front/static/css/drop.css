@@ -14,9 +14,15 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+
+
 :root {
     --main-color: #00afca;
     --dark-theme: #2c4054;
+    --background-color: #1c2833;
+    --text-color: #f0f0f0;
+    --input-background: #354a5f;
+    --input-border: #5c6b78;
     --main-max-width: 1300px; /* ваша максимальная ширина */
     --header-margin: calc((100% - var(--main-max-width)) / 2); /* расчет отступа */
 }

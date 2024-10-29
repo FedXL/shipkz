@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views import View
-from app_auth.forms import ProfileModelForm
+from app_auth.forms import ProfileModelForm, CallbackResponseForm
 from app_auth.mixins import ActiveUserConfirmMixin
 from app_auth.mixins import EmailVerificationRequiredMixin
 from app_auth.models import Profile
@@ -16,6 +16,7 @@ from app_front.management.orders.orders_handler import get_orders_by_username_pr
 from app_front.management.unregister_authorization.token import check_token, handle_no_token_comeback_version, \
     create_access_token
 from app_front.management.utils import get_user_ip
+from app_front.models import CallbackForm
 
 from legacy.models import Exchange, WebUsers, Orders, WebUsersMeta
 from app_front.tasks import unregister_web_task_way, registered_web_task_way
@@ -314,5 +315,23 @@ def make_text_for_status(data):
         count += 1
     return result
 
+
+class CallbackFormView(View):
+    def get(self,request):
+        form = CallbackResponseForm()
+        return render(request, 'pages/callback.html', {'form': form})
+
+    def post(self,request):
+        form = CallbackResponseForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            email = data.get('email')
+            connect = data.get('connect')
+            name = data.get('name')
+            message = data.get('message')
+            callback_form=CallbackForm.objects.create(email=email,connect=connect,name=name,message=message)
+            messages.success(request, f'Ваше обращение за номером {callback_form.id} успешно зарегистрировано. Мы обязательно отреагируем.')
+            return HttpResponseRedirect(reverse('auth_messages'))
+        return render(request, 'pages/callback.html', {'form': form})
 
 
