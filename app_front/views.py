@@ -211,7 +211,7 @@ class LkOrderPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, Vi
 class LkPreordersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
     def get(self, request):
         username = request.user.profile.web_user.web_username
-        data=get_orders_by_username_pre(request.user.username, pre=True)
+        data=get_orders_by_username_pre(username, pre=True)
         return render(request, 'lk-pages/lk-pre-orders-page.html',context={'data':data})
 
 
