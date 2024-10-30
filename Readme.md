@@ -1,5 +1,7 @@
 ### START
 Just run docker-compose up --build. However, the project requires a pre-configured database and can’t initialize it on its own. You can start it, but not everything will work as expected.
+- u can see how it works here https://supportstation/shipkz
+
 
 ### Unregistered User Authorization Model Description
 
