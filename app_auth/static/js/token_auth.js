@@ -14,35 +14,70 @@ function setCookie(name, value, days) {
 }
 
 
+//function checkTokenUnregisterUser() {
+//    const token = getCookie('ShipKZAuthorization');
+//    const csrfToken = getCookie('csrftoken');
+//    if (csrfToken) {
+//        fetch(apiEndpoint, {
+//            method: 'POST',
+//            headers: {
+//                'Content-Type': 'application/json',
+//                'X-CSRFToken': csrfToken
+//            },
+//            body: JSON.stringify({ token: token })
+//        })
+//        .then(response => {
+//            if (!response.ok) {
+//                throw new Error('Network response was not ok');
+//            }
+//            return response.json();
+//        })
+//        .then(data => {
+//            console.log('Success:', data);
+//            if (data.token) {
+//                setCookie('ShipKZAuthorization', data.token, 14);
+//            }
+//        })
+//        .catch(error => {
+//            console.error('There was a problem with the fetch operation:', error);
+//        });
+//    } else {
+//        console.error('CSRF token not found in cookies');
+//    }
+//}
 function checkTokenUnregisterUser() {
-    const token = getCookie('ShipKZAuthorization');
-    const csrfToken = getCookie('csrftoken');
-    if (csrfToken) {
-        fetch(apiEndpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify({ token: token })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Success:', data);
-            if (data.token) {
-                setCookie('ShipKZAuthorization', data.token, 14);
-            }
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-    } else {
-        console.error('CSRF token not found in cookies');
-    }
+    return new Promise((resolve, reject) => {
+        const token = getCookie('ShipKZAuthorization');
+        const csrfToken = getCookie('csrftoken');
+        if (csrfToken) {
+            fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ token: token })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    reject(new Error('Network response was not ok'));
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                if (data.token) {
+                    setCookie('ShipKZAuthorization', data.token, 14);
+                }
+                resolve();  // Успешно завершили, вызываем resolve
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                reject(error);  // В случае ошибки вызываем reject
+            });
+        } else {
+            console.error('CSRF token not found in cookies');
+            reject(new Error('CSRF token not found in cookies'));
+        }
+    });
 }
-

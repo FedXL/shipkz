@@ -365,7 +365,7 @@ const updateSquareCounter2 = (count) => {
 
             const initWssConnection = (token, url) => {
                 console.log('start init wss connection');
-                checkTokenUnregisterUser();
+
                 const ws = new WebSocket(url);
                 ws.onopen = function () {
                     let data = {
@@ -625,16 +625,24 @@ const updateSquareCounter2 = (count) => {
 
 
             function unregisteredWssConnect(event) {
-                let clickButton = document.getElementById('messengerMiniButton');
-                clickButton.removeEventListener('click', unregisteredWssConnect);
-                checkTokenUnregisterUser();
-                const accessToken = getToken();
-                const userName = 'UserName';
-                clickButton.style.display = 'none';
-                let messanger_container = document.getElementById('chatMainContainer');
-                messanger_container.style.display = 'block';
-                const ws = initWssConnection(accessToken, socketUrl);
-                addEventListenersToChatConstructions(userName, ws);
+            checkTokenUnregisterUser()  // Запускаем проверку токена
+                .then(() => {
+                    // Этот код выполнится только после успешной проверки токена
+                    let clickButton = document.getElementById('messengerMiniButton');
+                    clickButton.removeEventListener('click', unregisteredWssConnect);
+                    const accessToken = getToken();
+                    const userName = 'UserName';
+                    clickButton.style.display = 'none';
+                    let messanger_container = document.getElementById('chatMainContainer');
+                    messanger_container.style.display = 'block';
+                    const ws = initWssConnection(accessToken, socketUrl);
+                    addEventListenersToChatConstructions(userName, ws);
+                })
+                .catch(error => {
+                    // Обработка ошибок при проверке токена
+                    console.error('Failed to check token:', error);
+                    // Вы можете здесь добавить код для уведомления пользователя об ошибке
+                });
             }
 
 
