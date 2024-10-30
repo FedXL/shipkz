@@ -2,7 +2,6 @@ import ast
 import datetime
 import json
 from rest_framework import serializers
-from app_front.management.email.email_sender import my_logger
 from legacy.models import Orders, OrderStatusInfo
 
 status_attr_dict = {
@@ -32,7 +31,8 @@ class OrdersSerializerPre(serializers.ModelSerializer):
 
     def get_items(self, obj):
         body_from_database = obj.body
-
+        if not body_from_database:
+            return []
         try:
             parsed_body_data = json.loads(body_from_database)
         except json.JSONDecodeError:

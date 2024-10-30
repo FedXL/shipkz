@@ -134,7 +134,7 @@ class OrderStatusInfo(models.Model):
         db_table = 'order_status_info'
 
 
-class  Orders(models.Model):
+class Orders(models.Model):
     client = models.ForeignKey('Users', models.DO_NOTHING, db_column='client', blank=True, null=True)
     buyer = models.ForeignKey(Buyers, models.DO_NOTHING, db_column='buyer', blank=True, null=True)
     type = models.CharField(max_length=255, blank=True, null=True)

@@ -17,7 +17,6 @@ from app_front.management.unregister_authorization.token import check_token, han
     create_access_token
 from app_front.management.utils import get_user_ip
 from app_front.models import CallbackForm
-
 from legacy.models import Exchange, WebUsers, Orders, WebUsersMeta
 from app_front.tasks import unregister_web_task_way, registered_web_task_way
 from legacy.serializers import OrderFullSerializer, OrdersSerializerPre
@@ -191,7 +190,8 @@ class LkCreateOrderPageView(ActiveUserConfirmMixin,EmailVerificationRequiredMixi
 
 class LkOrdersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
     def get(self, request):
-        data=get_orders_by_username_full(request.user.username)
+        username = request.user.profile.web_user.web_username
+        data=get_orders_by_username_full(username)
         return render(request, 'lk-pages/lk-orders-page.html',context={'data':data})
 
 
@@ -199,7 +199,7 @@ class LkOrderPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, Vi
     def get(self, request,order_id):
         user = request.user
         web_user = user.profile.web_user
-        order = Orders.objects.filter(id=order_id,web_user=web_user).first()
+        order = Orders.objects.filter(id=order_id, web_user=web_user).first()
         if order:
             data = OrderFullSerializer(order).data
             data_details = OrdersSerializerPre(order).data
@@ -210,6 +210,7 @@ class LkOrderPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, Vi
 
 class LkPreordersPageView(ActiveUserConfirmMixin, EmailVerificationRequiredMixin, View):
     def get(self, request):
+        username = request.user.profile.web_user.web_username
         data=get_orders_by_username_pre(request.user.username, pre=True)
         return render(request, 'lk-pages/lk-pre-orders-page.html',context={'data':data})
 
@@ -257,10 +258,12 @@ class LkMessagesPageView(ActiveUserConfirmMixin,
     def get(self, request):
         user = request.user
         profile = get_object_or_404(Profile, user=user)
-        web_user = WebUsers.objects.filter(web_username=user.username).first()
-        username = web_user.web_username
-        user_id = web_user.user_id
-        token = create_access_token(user_id=user_id, username=username, secret=settings.SHARABLE_SECRET, delta_in_sec=20)
+        web_user = profile.web_user
+        if not web_user:
+            messages.error(request, 'Произошла ошибка, этого не должно было случиться. Мы её уже решаем. Для срочной связи используйте телеграм. Либо форму для обратной связи.')
+            messages.info(request, 'Наш телеграм бот: https://t.me/shipKZ')
+            return HttpResponseRedirect(reverse('auth_messages'))
+        token = create_access_token(user_id=web_user.user_id, username=web_user.web_username, secret=settings.SHARABLE_SECRET, delta_in_sec=20)
         return render(request,
                       template_name='lk-pages/lk-messages-page.html',
                       context={'token': token})

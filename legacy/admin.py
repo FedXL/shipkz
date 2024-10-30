@@ -99,6 +99,7 @@ def open_bot_meeting_message(modeladmin, request, queryset):
 class WebUsersAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = ['user_id', 'user_name', 'web_username']
     actions = [open_bot_meeting_message]
+    search_fields = ['web_username', 'user_id']
 
 class WebUsersMetaAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
     list_display = [field.name for field in WebUsersMeta._meta.fields]
