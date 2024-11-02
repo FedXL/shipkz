@@ -5,6 +5,7 @@
 __pycache__/
 *.env
 .venv
+app_front/management/google_sheets/credentials.json
 /legacy/legacy_codebase/chrome/
 /legacy/legacy_codebase/chrome-win32/
 /legacy/legacy_codebase/chromedriver/**

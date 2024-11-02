@@ -7,7 +7,8 @@
         <div class="form-country">
             {% for choice in form.country %}
                 <label class="radio-img" for="radio-{{ choice.data.value }}">
-                    <input type="radio" id="radio-{{ choice.data.value }}"  name="country" value="{{ choice.data.value }}" style="display:none;">
+                    <input type="radio" id="radio-{{ choice.data.value }}" name="country" value="{{ choice.data.value }}" style="display:none;"
+                       {% if choice.data.value == form.country.value %} checked {% endif %} required>
                     <img src="{% static '/images/flags' %}/{{forloop.counter}}.jpg?v={{version}}" title="{{ choice.choice_label }}">
                 </label>
             {% endfor %}

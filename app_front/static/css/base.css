@@ -9,8 +9,8 @@ header {
 }
 
 .image-container {
-    height: 425px; /* Фиксированная высота контейнера */
-    overflow: hidden; /* Скрывает часть картинки, выходящую за пределы контейнера */
+    height: 425px;
+    overflow: hidden;
     position: relative;
     width: 100%;
     background-color: white;
@@ -18,9 +18,9 @@ header {
 
 
 .image-background  {
-    position: absolute; /* Позволяет позиционировать картинку */
-    top: 50%; /* Центрирует картинку по вертикали */
-    left: 50%; /* Центрирует картинку по горизонтали */
+    position: absolute;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -54%) scale(0.75); /* Центрирует картинку в контейнере */
     transition: transform 0.2s; /* Плавный переход для эффекта */
 }
@@ -54,7 +54,6 @@ nav {max-width: 1300px;
     padding-left: 40px;
     padding-right: 40px;
     display: flex;
-
     flex-direction: column;
 }
 @media (max-width: 1300px) {
@@ -64,14 +63,10 @@ nav {max-width: 1300px;
     }
 }
 
-
-
-
 .short-menu{
     justify-content: space-between;
     flex-grow: 1;
 }
-
 
 
 
@@ -115,11 +110,11 @@ nav {max-width: 1300px;
 
 
 .menu-item a {
-    padding: 12px;
+    padding: 10px;
     display: flex;
     color: white;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 20px;
     height: 100%;
     white-space: nowrap;
     align-items: center; /* Vertically centers the text */

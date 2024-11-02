@@ -6,6 +6,7 @@
 {% block content %}
 {% load static %}
 {% include 'components/yandex-widget.html' %}
+
 <div class="content-block">
 <p>
     Мы помогаем купить и доставить товары из зарубежных интернет-магазинов в Россию с апреля 2022 года.
@@ -161,4 +162,25 @@
     </div>
 </div>
 {% include 'components/mini_messanger.html' %}
+
+ <script>
+     console.log('im life');
+        const socket = new WebSocket('ws://localhost:9933/ws/support/');
+
+        socket.onopen = function(event) {
+            console.log('WebSocket is connected.');
+
+            socket.send('Hello Server!');
+        };
+
+        socket.onmessage = function(event) {
+            console.log('Message from server:', event.data);
+        };
+
+        socket.onclose = function(event) {
+            console.log('WebSocket is closed now.');
+        };
+    </script>
 {% endblock %}
+
+

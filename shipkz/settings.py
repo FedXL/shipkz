@@ -3,17 +3,18 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
-BASE_URL = "https://supportstation.kz"
-BASE_URL_HOST = f"https://supportstation.kz"
+BASE_URL = "https://shipkz.ru"
+BASE_URL_HOST = f"https://shipkz.ru"
 SECRET_KEY = os.getenv('SECRET_KEY')
 SESSION_COOKIE_SECURE = False
-DEBUG = True
+DEBUG = False
 
 CSRF_TRUSTED_ORIGINS = [
     'https://supportstation.kz',
+    'https://shipkz.ru',
 ]
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','supportstation.kz']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','supportstation.kz','shipkz.ru']
 AUTH_USER_MODEL = 'app_auth.CustomUser'
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -120,12 +121,9 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-FORCE_SCRIPT_NAME = '/shipkz'
-APPEND_SLASH = True
-MEDIA_URL = '/shipkz/media/'
-STATIC_URL = '/shipkz/static/'
-# MEDIA_URL = '/media/'
-# STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
 STATIC_ROOT =  '/var/www/static'
 MEDIA_ROOT = '/var/www/media'
 

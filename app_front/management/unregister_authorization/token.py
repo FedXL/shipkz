@@ -41,7 +41,18 @@ def create_access_token(username: str, secret=sharable_secret, user_id=0,delta_i
     return token
 
 def check_token(token: str, secret=sharable_secret, is_comment=False) -> tuple[dict | None, str] | None | dict:
-    """return decoded token dict  if is_comment=False, else return tuple(decoded_token, comment)"""
+    """return decoded token dict  if is_comment=False, else return tuple(decoded_token, comment)
+    dict: {
+  "username": "UNREG_ULiDnoRV8vOoFZBvGrEe",
+  "user_id": 51168,
+  "ip": null,
+  "iat": 1730259527,
+  "exp": 1731469127
+}
+    """
+
+
+
     comment, decoded_token = None, None
     try:
         decoded_token = jwt.decode(token, secret, algorithms=["HS256"], verify=True)

@@ -193,10 +193,10 @@ class ConfirmRecoveryPasswordView(View):
             return render(request, 'registration/auth_messages.html')
         user_ip = get_user_ip(request)
 
-        if token_dict.get('ip') != user_ip:
-            messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
-            messages.error(request, 'IP равенство')
-            return render(request, 'registration/auth_messages.html')
+        # if token_dict.get('ip') != user_ip:
+        #     messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
+        #     messages.error(request, 'IP равенство')
+        #     return render(request, 'registration/auth_messages.html')
         form = RecoveryPasswordFormChangePasswordForm(initial={'token': token})
         return render(request, 'registration/recovery_password_second_step.html', context={'form': form})
 
@@ -207,11 +207,14 @@ class ConfirmRecoveryPasswordView(View):
             token = form.cleaned_data.get('token')
             if not token:
                 messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
+                messages.error(request, 'Токен не найден')
                 return render(request, 'registration/auth_messages.html')
             password = form.cleaned_data.get('password')
             user = CustomUser.objects.filter(repair_verification_token=token).first()
+
             if not user:
                 messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
+                messages.error(request, 'Пользователь не найден')
                 return render(request, 'registration/auth_messages.html')
             token_dict = check_token(token, secret=settings.REPAIR_PASSWORD_SECRET)
             if not token_dict:
@@ -221,11 +224,12 @@ class ConfirmRecoveryPasswordView(View):
             if user_id != user.id:
                 messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
                 return render(request, 'registration/auth_messages.html')
-            if token_dict.get('ip') != get_user_ip(request):
-                messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
-                return render(request, 'registration/auth_messages.html')
+            # if token_dict.get('ip') != get_user_ip(request):
+            #     messages.error(request, 'Что то пошло не так, пишите в администрацию если эта ошибка повторится.')
+            #     return render(request, 'registration/auth_messages.html')
 
             user.set_password(password)
+            user.save()
             user.repair_verification_token = None
             user.save()
             messages.success(request, 'Пароль успешно изменен')
